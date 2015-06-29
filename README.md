@@ -1,4 +1,4 @@
-# PythonSkeleton
+# DirectoryTools
 
 
 ## Setup
@@ -6,19 +6,19 @@
 Install the project from a local clone.
 
 ```sh
-pip3 install --user --editable ../python-skeleton
+pip3 install --user --editable ../directory-tools
 ```
 
 Install the project from GitHub.
 
 ```sh
-pip3 install git+git://github.com/FunTimeCoding/python-skeleton.git
+pip3 install git+git://github.com/FunTimeCoding/directory-tools.git
 ```
 
 Uninstall the project.
 
 ```sh
-pip3 uninstall python-skeleton
+pip3 uninstall directory-tools
 ```
 
 
@@ -27,7 +27,7 @@ pip3 uninstall python-skeleton
 Run the main script without having to install the project.
 
 ```sh
-PYTHONPATH=. bin/ps
+PYTHONPATH=. bin/dt
 ```
 
 Install tools on OS X.

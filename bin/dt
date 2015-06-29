@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-from python_skeleton.python_skeleton import PythonSkeleton
+from directory_tools.directory_tools import DirectoryTools
 
 
 def main():
-    application = PythonSkeleton()
+    application = DirectoryTools()
     return application.run()
 
 if __name__ == '__main__':

@@ -4,14 +4,14 @@ except ImportError:
     from distutils.core import setup
 
 setup(
-    name='python-skeleton',
+    name='directory-tools',
     version='0.1',
-    description='Stub description for python-skeleton.',
+    description='Stub description for directory-tools.',
     install_requires=[],
-    scripts=['bin/ps'],
-    packages=['python_skeleton'],
+    scripts=['bin/dt'],
+    packages=['directory_tools'],
     author='Alexander Reitzel',
     author_email='funtimecoding@gmail.com',
     url='http://example.org',
-    download_url='http://example.org/python-skeleton.tar.gz'
+    download_url='http://example.org/directory-tools.tar.gz'
 )

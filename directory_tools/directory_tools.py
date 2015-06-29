@@ -1,7 +1,7 @@
-class PythonSkeleton:
+class DirectoryTools:
     @staticmethod
     def run():
-        PythonSkeleton.print_hello()
+        DirectoryTools.print_hello()
 
         return 0
 
