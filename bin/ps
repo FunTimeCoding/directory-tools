@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+from python_skeleton.python_skeleton import PythonSkeleton
+
+
+def main():
+    application = PythonSkeleton()
+    return application.run()
+
+if __name__ == '__main__':
+    main()
