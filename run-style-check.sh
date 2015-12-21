@@ -5,39 +5,51 @@ CI_MODE=0
 if [ "${1}" = "--ci-mode" ]; then
     shift
     CI_MODE=1
+    mkdir -p build/log
 fi
 
 echo "================================================================================"
-echo ""
+echo
 echo "Running PEP8."
 
 if [ "${CI_MODE}" = "1" ]; then
-    mkdir -p build/log
-    pep8 --exclude=.git,.pyvenv,__pycache__ --statistics . | tee build/log/pep8.txt || true
+    pep8 --exclude=.git,.tox,.pyvenv,__pycache__ --statistics . | tee build/log/pep8.txt || true
 else
-    pep8 --exclude=.git,.pyvenv,__pycache__ --statistics . || true
+    pep8 --exclude=.git,.tox,.pyvenv,__pycache__ --statistics . || true
 fi
 
-echo ""
+echo
 echo "================================================================================"
-echo ""
+echo
 echo "Running PyLint."
-FIND=$(find . -name '*.py' -and -not -path '*/.pyvenv/*')
+OPERATING_SYSTEM=$(uname)
+
+if [ "${OPERATING_SYSTEM}" = "Darwin" ]; then
+    FIND="gfind"
+else
+    FIND="find"
+fi
+
+RESULT=$(${FIND} . -type f -name '*.py' -size -4096c -regextype posix-extended ! -regex '^.*/(.pyvenv|.tox|.git)/.*$')
+RETURN_CODE=0
 
 if [ "${CI_MODE}" = "1" ]; then
-    mkdir -p build/log
     # TODO: Fix this warning. It's tricky. Adding quotes will break pylint.
     # shellcheck disable=SC2086
-    pylint --rcfile=.pylintrc ${FIND} | tee build/log/pylint.txt
+    pylint --rcfile=.pylintrc ${RESULT} | tee build/log/pylint.txt || RETURN_CODE=$?
 else
-    # TODO: Fix this warning too.
     # shellcheck disable=SC2086
-    pylint --rcfile=.pylintrc ${FIND}
+    pylint --rcfile=.pylintrc ${RESULT} || RETURN_CODE=$?
+fi
+
+if [ ! "${RETURN_CODE}" = "0" ]; then
+    echo "Return code: ${RETURN_CODE}"
+    echo
 fi
 
 echo "================================================================================"
-echo ""
+echo
 echo "Running ShellCheck."
-find . -name '*.sh' -exec sh -c "shellcheck {} || true" \;
-echo ""
+find . -name '*.sh' -exec sh -c 'shellcheck ${1} || true' '_' '{}' \;
+echo
 echo "================================================================================"

@@ -1,12 +1,11 @@
 # DirectoryTools
 
-
 ## Setup
 
 Install the project from a local clone.
 
 ```sh
-pip3 install --user --editable ../directory-tools
+pip3 install --user --editable .
 ```
 
 Install the project from GitHub.
@@ -47,7 +46,6 @@ Install pip requirements.
 ```sh
 pip3 install --upgrade --user --requirement requirements.txt
 ```
-
 
 Run code style check, metrics and tests.
 

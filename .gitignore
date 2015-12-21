@@ -1,5 +1,7 @@
 *.pyc
 *.egg-info
 .coverage
-build
 .pyvenv
+.cache
+.tox
+build
