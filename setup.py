@@ -1,7 +1,5 @@
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+#!/usr/bin/env python3
+from setuptools import setup
 
 setup(
     name='directory-tools',
