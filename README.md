@@ -1,5 +1,16 @@
 # DirectoryTools
 
+## Usage
+
+Configure `~/.directory-tools.yml`.
+
+```yml
+domain: example
+top_level: org
+password: example
+```
+
+
 ## Setup
 
 Install the project from a local clone.
