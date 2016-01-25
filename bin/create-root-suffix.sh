@@ -6,7 +6,7 @@ SCRIPT_DIR=$(cd "${DIR}" || exit 1; pwd)
 INTERCHANGE_FILE="/tmp/create_root_suffix.ldif"
 DOMAIN_UPPER_CASE=$(echo ${DOMAIN} | sed 's/.*/\u&/')
 ORGANIZATION="${DOMAIN_UPPER_CASE} Organization"
-echo "dn: dc=${DOMAIN},dc=${TOP_LEVEL}
+echo "dn: ${SUFFIX}
 objectClass: top
 objectClass: dcObject
 objectclass: organization

@@ -2,6 +2,10 @@
 
 create-tree.sh
 create-root-suffix.sh
-add-index.sh
+set-index.sh
 add-access-control-settings.sh
-create-group.sh
+add-unit.sh People
+add-unit.sh users
+add-unit.sh groups
+add-person.sh "Alexander Reitzel"
+add-account.sh "Alexander Reitzel"

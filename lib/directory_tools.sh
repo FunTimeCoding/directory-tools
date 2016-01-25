@@ -96,3 +96,6 @@ fi
 export ADD="sudo ldapadd -Y EXTERNAL -H ldapi:///"
 export DELETE="sudo ldapdelete -Y EXTERNAL -H ldapi:///"
 export MODIFY="sudo ldapmodify -Y EXTERNAL -H ldapi:///"
+export SUFFIX="dc=${DOMAIN},dc=${TOP_LEVEL}"
+export DOMAIN_UPPER_CASE=$(echo ${DOMAIN} | sed 's/.*/\u&/')
+export ORGANIZATION="${DOMAIN_UPPER_CASE} Organization"

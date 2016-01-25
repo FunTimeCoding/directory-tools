@@ -16,8 +16,8 @@ objectClass: olcDatabaseConfig
 objectClass: olcMdbConfig
 olcDatabase: mdb
 olcDbDirectory: ${DATABASE_DIRECTORY}
-olcSuffix: dc=${DOMAIN},dc=${TOP_LEVEL}
-olcRootDN: cn=admin,dc=${DOMAIN},dc=${TOP_LEVEL}
+olcSuffix: ${SUFFIX}
+olcRootDN: cn=admin,${SUFFIX}
 olcRootPW: ${PASSWORD}
 olcDbIndex: objectClass eq" > "${INTERCHANGE_FILE}"
     ${ADD} -f "${INTERCHANGE_FILE}"
