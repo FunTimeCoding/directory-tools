@@ -93,6 +93,7 @@ if [ "${VERBOSE}" = true ]; then
     echo "define_library_variables"
 fi
 
+export SEARCH="sudo ldapsearch -Q -Y EXTERNAL -H ldapi:/// -LLL"
 export ADD="sudo ldapadd -Y EXTERNAL -H ldapi:///"
 export DELETE="sudo ldapdelete -Y EXTERNAL -H ldapi:///"
 export MODIFY="sudo ldapmodify -Y EXTERNAL -H ldapi:///"

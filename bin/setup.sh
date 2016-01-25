@@ -1,5 +1,6 @@
 #!/bin/sh -e
 
+enable-security.sh
 create-tree.sh
 create-root-suffix.sh
 set-index.sh
@@ -9,3 +10,5 @@ add-unit.sh users
 add-unit.sh groups
 add-person.sh "Alexander Reitzel"
 add-account.sh "Alexander Reitzel"
+
+show-status.sh
