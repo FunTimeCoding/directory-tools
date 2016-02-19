@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
-DIR=$(dirname "${0}")
-SCRIPT_DIR=$(cd "${DIR}" || exit 1; pwd)
+DIRECTORY=$(dirname "${0}")
+SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 
 usage()
 {
@@ -9,7 +9,7 @@ usage()
     echo "Example: ${0} \"John Doe\""
 }
 
-. "${SCRIPT_DIR}/../lib/directory_tools.sh"
+. "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
 FULL_NAME="${1}"
 
 if [ "${FULL_NAME}" = "" ]; then
@@ -21,7 +21,7 @@ fi
 INTERCHANGE_FILE="/tmp/add_acount.ldif"
 FIRST_NAME="${FULL_NAME% *}"
 LAST_NAME="${FULL_NAME#* }"
-FIRST_LETTER=$(echo ${FIRST_NAME} | head -c 1)
+FIRST_LETTER=$(echo "${FIRST_NAME}" | head -c 1)
 USER_NAME=$(echo "${FIRST_LETTER}${LAST_NAME}" | sed 's/.*/\L&/')
 USER_PASSWORD=$(slappasswd -s "${USER_NAME}")
 echo "dn: uid=${USER_NAME},ou=users,${SUFFIX}

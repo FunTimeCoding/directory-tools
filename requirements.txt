@@ -4,3 +4,4 @@ pytest
 pytest-cov
 ldap3
 shyaml
+git+ssh://git@github.com/FunTimeCoding/python-utility.git#egg=python-utility

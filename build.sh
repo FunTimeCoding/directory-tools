@@ -36,9 +36,9 @@ while true; do
 done
 
 if [ "${WORKSPACE}" = "" ]; then
-    DIR=$(dirname "${0}")
-    SCRIPT_DIR=$(cd "${DIR}" || exit 1; pwd)
-    WORKSPACE="${SCRIPT_DIR}"
+    DIRECTORY=$(dirname "${0}")
+    SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
+    WORKSPACE="${SCRIPT_DIRECTORY}"
 fi
 
 echo "WORKSPACE: ${WORKSPACE}"
@@ -53,13 +53,13 @@ if [ ! "${PYTHONHOME}" = "" ]; then
 fi
 
 echo "PATH: ${PATH}"
-BUILD_DIR="${WORKSPACE}/build"
+BUILD_DIRECTORY="${WORKSPACE}/build"
 
-if [ -d "${BUILD_DIR}" ]; then
-    rm -rf "${BUILD_DIR}"
+if [ -d "${BUILD_DIRECTORY}" ]; then
+    rm -rf "${BUILD_DIRECTORY}"
 fi
 
-mkdir -p "${BUILD_DIR}/log"
+mkdir -p "${BUILD_DIRECTORY}/log"
 PYVENV_HOME="${WORKSPACE}/.pyvenv"
 
 echo "Creating pyvenv."

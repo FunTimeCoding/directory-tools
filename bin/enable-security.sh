@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
-DIR=$(dirname "${0}")
-SCRIPT_DIR=$(cd "${DIR}" || exit 1; pwd)
+DIRECTORY=$(dirname "${0}")
+SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 
 usage()
 {
@@ -9,7 +9,7 @@ usage()
     echo "Example: ${0} example.org"
 }
 
-. "${SCRIPT_DIR}/../lib/directory_tools.sh"
+. "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
 DOMAIN="${1}"
 
 if [ "${DOMAIN}" = "" ]; then

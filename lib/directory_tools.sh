@@ -18,12 +18,12 @@ function_exists()
 
 while true; do
     case ${1} in
-        -c|--config)
+        --config)
             CONFIG=${2-}
             shift 2
             ;;
-        -h|--help)
-            echo "Global usage: ${0} [-v|--verbose][-d|--debug][-h|--help][-c|--config CONFIG]"
+        --help)
+            echo "Global usage: ${0} [--verbose][--debug][--help][--config CONFIG]"
 
             if function_exists usage; then
                 usage
@@ -31,12 +31,12 @@ while true; do
 
             exit 0
             ;;
-        -v|--verbose)
+        --verbose)
             VERBOSE=true
             echo "Verbose mode enabled."
             shift
             ;;
-        -d|--debug)
+        --debug)
             set -x
             shift
             ;;
@@ -59,12 +59,12 @@ fi
 REALPATH_EXISTS=$(command -v realpath 2>&1)
 
 if [ ! "${REALPATH_EXISTS}" = "" ]; then
-    REALPATH_CMD="realpath"
+    REALPATH="realpath"
 else
     REALPATH_EXISTS=$(command -v grealpath 2>&1)
 
     if [ ! "${REALPATH_EXISTS}" = "" ]; then
-        REALPATH_CMD="grealpath"
+        REALPATH="grealpath"
     else
         echo "Required tool (g)realpath not found."
 
@@ -73,7 +73,7 @@ else
 fi
 
 if [ -f "${CONFIG}" ]; then
-    CONFIG=$(${REALPATH_CMD} "${CONFIG}")
+    CONFIG=$(${REALPATH} "${CONFIG}")
 else
     CONFIG=""
 fi
@@ -93,10 +93,11 @@ if [ "${VERBOSE}" = true ]; then
     echo "define_library_variables"
 fi
 
-export SEARCH="sudo ldapsearch -Q -Y EXTERNAL -H ldapi:/// -LLL"
+export SEARCH="sudo ldapsearch -o ldif-wrap=no -Q -Y EXTERNAL -H ldapi:/// -LLL"
+export CAT="sudo slapcat -o ldif-wrap=no -F /etc/ldap/slapd.d"
 export ADD="sudo ldapadd -Y EXTERNAL -H ldapi:///"
 export DELETE="sudo ldapdelete -Y EXTERNAL -H ldapi:///"
 export MODIFY="sudo ldapmodify -Y EXTERNAL -H ldapi:///"
 export SUFFIX="dc=${DOMAIN},dc=${TOP_LEVEL}"
-export DOMAIN_UPPER_CASE=$(echo ${DOMAIN} | sed 's/.*/\u&/')
+export DOMAIN_UPPER_CASE=$(echo "${DOMAIN}" | sed 's/.*/\u&/')
 export ORGANIZATION="${DOMAIN_UPPER_CASE} Organization"

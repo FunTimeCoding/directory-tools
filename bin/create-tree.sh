@@ -1,8 +1,8 @@
 #!/bin/sh -e
 
-DIR=$(dirname "${0}")
-SCRIPT_DIR=$(cd "${DIR}" || exit 1; pwd)
-. "${SCRIPT_DIR}/../lib/directory_tools.sh"
+DIRECTORY=$(dirname "${0}")
+SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
+. "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
 DATABASE_DIRECTORY="/var/lib/ldap/${DOMAIN}.${TOP_LEVEL}"
 
 if [ -f "${DATABASE_DIRECTORY}" ]; then
