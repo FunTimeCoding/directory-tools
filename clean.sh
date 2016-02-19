@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-echo "Deleting cached and generated files."
+echo "Delete cached and generated files."
 DIRECTORY=$(dirname "${0}")
 SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 FILES="build .pyvenv .coverage .cache .tox"
