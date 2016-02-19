@@ -9,6 +9,7 @@ usage()
     echo "Example: ${0} jdoe"
 }
 
+# shellcheck source=/dev/null
 . "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
 USER_NAME="${1}"
 

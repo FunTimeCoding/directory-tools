@@ -9,6 +9,7 @@ usage()
     echo "Example: ${0} example.org"
 }
 
+# shellcheck source=/dev/null
 . "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
 DOMAIN="${1}"
 

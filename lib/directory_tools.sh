@@ -83,21 +83,33 @@ if [ "${VERBOSE}" = true ]; then
 fi
 
 if [ ! "${CONFIG}" = "" ]; then
-    export PLAIN_PASSWORD=$(shyaml get-value "password" < "${CONFIG}" 2>/dev/null || true)
-    export PASSWORD=$(slappasswd -s "${PLAIN_PASSWORD}")
-    export DOMAIN=$(shyaml get-value "domain" < "${CONFIG}" 2>/dev/null || true)
-    export TOP_LEVEL=$(shyaml get-value "top_level" < "${CONFIG}" 2>/dev/null || true)
+    PLAIN_PASSWORD=$(shyaml get-value "password" < "${CONFIG}" 2>/dev/null || true)
+    export PLAIN_PASSWORD
+    PASSWORD=$(slappasswd -s "${PLAIN_PASSWORD}")
+    export PASSWORD
+    DOMAIN=$(shyaml get-value "domain" < "${CONFIG}" 2>/dev/null || true)
+    export DOMAIN
+    TOP_LEVEL=$(shyaml get-value "top_level" < "${CONFIG}" 2>/dev/null || true)
+    export TOP_LEVEL
 fi
 
 if [ "${VERBOSE}" = true ]; then
     echo "define_library_variables"
 fi
 
-export SEARCH="sudo ldapsearch -o ldif-wrap=no -Q -Y EXTERNAL -H ldapi:/// -LLL"
-export CAT="sudo slapcat -o ldif-wrap=no -F /etc/ldap/slapd.d"
-export ADD="sudo ldapadd -Y EXTERNAL -H ldapi:///"
-export DELETE="sudo ldapdelete -Y EXTERNAL -H ldapi:///"
-export MODIFY="sudo ldapmodify -Y EXTERNAL -H ldapi:///"
-export SUFFIX="dc=${DOMAIN},dc=${TOP_LEVEL}"
-export DOMAIN_UPPER_CASE=$(echo "${DOMAIN}" | sed 's/.*/\u&/')
-export ORGANIZATION="${DOMAIN_UPPER_CASE} Organization"
+SEARCH="sudo ldapsearch -o ldif-wrap=no -Q -Y EXTERNAL -H ldapi:/// -LLL"
+export SEARCH
+CAT="sudo slapcat -o ldif-wrap=no -F /etc/ldap/slapd.d"
+export CAT
+ADD="sudo ldapadd -Y EXTERNAL -H ldapi:///"
+export ADD
+DELETE="sudo ldapdelete -Y EXTERNAL -H ldapi:///"
+export DELETE
+MODIFY="sudo ldapmodify -Y EXTERNAL -H ldapi:///"
+export MODIFY
+SUFFIX="dc=${DOMAIN},dc=${TOP_LEVEL}"
+export SUFFIX
+DOMAIN_UPPER_CASE=$(echo "${DOMAIN}" | sed 's/.*/\u&/')
+export DOMAIN_UPPER_CASE
+ORGANIZATION="${DOMAIN_UPPER_CASE} Organization"
+export ORGANIZATION

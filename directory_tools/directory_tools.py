@@ -1,6 +1,7 @@
 from ldap3 import Server, Connection, AUTH_SIMPLE, STRATEGY_SYNC
 from python_utility.yaml_config import YamlConfig
 
+
 class DirectoryTools:
     @staticmethod
     def run():

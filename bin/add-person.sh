@@ -9,6 +9,7 @@ usage()
     echo "Example: ${0} \"John Doe\""
 }
 
+# shellcheck source=/dev/null
 . "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
 FULL_NAME="${1}"
 
