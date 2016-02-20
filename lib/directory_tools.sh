@@ -83,10 +83,10 @@ if [ "${VERBOSE}" = true ]; then
 fi
 
 if [ ! "${CONFIG}" = "" ]; then
-    PLAIN_PASSWORD=$(shyaml get-value "password" < "${CONFIG}" 2>/dev/null || true)
-    export PLAIN_PASSWORD
-    PASSWORD=$(slappasswd -s "${PLAIN_PASSWORD}")
-    export PASSWORD
+    MANAGER_PASSWORD=$(shyaml get-value "manager-password" < "${CONFIG}" 2>/dev/null || true)
+    export MANAGER_PASSWORD
+    ENCRYPTED_MANAGER_PASSWORD=$(slappasswd -s "${MANAGER_PASSWORD}")
+    export ENCRYPTED_MANAGER_PASSWORD
     DOMAIN=$(shyaml get-value "domain" < "${CONFIG}" 2>/dev/null || true)
     export DOMAIN
     TOP_LEVEL=$(shyaml get-value "top_level" < "${CONFIG}" 2>/dev/null || true)
