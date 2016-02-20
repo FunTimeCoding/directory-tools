@@ -6,9 +6,6 @@ if [ "$(command -v shyaml || true)" = "" ]; then
     exit 1
 fi
 
-CONFIG=""
-VERBOSE=false
-
 function_exists()
 {
     declare -f -F "${1}" > /dev/null
@@ -18,12 +15,8 @@ function_exists()
 
 while true; do
     case ${1} in
-        --config)
-            CONFIG=${2-}
-            shift 2
-            ;;
         --help)
-            echo "Global usage: ${0} [--verbose][--debug][--help][--config CONFIG]"
+            echo "Global usage: ${0} [--help][--config CONFIG][--debug]"
 
             if function_exists usage; then
                 usage
@@ -31,10 +24,9 @@ while true; do
 
             exit 0
             ;;
-        --verbose)
-            VERBOSE=true
-            echo "Verbose mode enabled."
-            shift
+        --config)
+            CONFIG=${2-}
+            shift 2
             ;;
         --debug)
             set -x
@@ -48,53 +40,37 @@ done
 
 OPTIND=1
 
-if [ "${VERBOSE}" = true ]; then
-    echo "find_config"
-fi
-
 if [ "${CONFIG}" = "" ]; then
     CONFIG="${HOME}/.directory-tools.yml"
 fi
 
-REALPATH_EXISTS=$(command -v realpath 2>&1)
-
-if [ ! "${REALPATH_EXISTS}" = "" ]; then
-    REALPATH="realpath"
-else
-    REALPATH_EXISTS=$(command -v grealpath 2>&1)
-
-    if [ ! "${REALPATH_EXISTS}" = "" ]; then
-        REALPATH="grealpath"
-    else
-        echo "Required tool (g)realpath not found."
+if [ "$(command -v realpath || true)" = "" ]; then
+    if [ "$(command -v grealpath || true)" = "" ]; then
+        echo "Command not found: realpath"
 
         exit 1
+    else
+        REALPATH="grealpath"
     fi
+else
+    REALPATH="realpath"
 fi
 
 if [ -f "${CONFIG}" ]; then
     CONFIG=$(${REALPATH} "${CONFIG}")
-else
-    CONFIG=""
-fi
-
-if [ "${VERBOSE}" = true ]; then
-    echo "load_config"
-fi
-
-if [ ! "${CONFIG}" = "" ]; then
-    MANAGER_PASSWORD=$(shyaml get-value "manager-password" < "${CONFIG}" 2>/dev/null || true)
-    export MANAGER_PASSWORD
-    ENCRYPTED_MANAGER_PASSWORD=$(slappasswd -s "${MANAGER_PASSWORD}")
-    export ENCRYPTED_MANAGER_PASSWORD
     DOMAIN=$(shyaml get-value "domain" < "${CONFIG}" 2>/dev/null || true)
     export DOMAIN
     TOP_LEVEL=$(shyaml get-value "top_level" < "${CONFIG}" 2>/dev/null || true)
     export TOP_LEVEL
-fi
+    MANAGER_PASSWORD=$(shyaml get-value "manager-password" < "${CONFIG}" 2>/dev/null || true)
+    export MANAGER_PASSWORD
 
-if [ "${VERBOSE}" = true ]; then
-    echo "define_library_variables"
+    if [ ! "$(command -v slappasswd || true)" = "" ]; then
+        ENCRYPTED_MANAGER_PASSWORD=$(slappasswd -s "${MANAGER_PASSWORD}")
+        export ENCRYPTED_MANAGER_PASSWORD
+    fi
+else
+    CONFIG=""
 fi
 
 SEARCH="sudo ldapsearch -o ldif-wrap=no -Q -Y EXTERNAL -H ldapi:/// -LLL"

@@ -1,14 +1,26 @@
 #!/bin/sh -e
 
+install.sh
+set-manager-password.sh admin
 enable-security.sh
-create-tree.sh
-create-root-suffix.sh
-set-index.sh
-add-access-control-settings.sh
-add-unit.sh People
-add-unit.sh users
+
+# Create a second database.
+#create-tree.sh
+#create-root-suffix.sh
+# Set index on uid
+#set-index.sh
+# Allow posixAccount to log in.
+#add-access-control-settings.sh
+
+# Not sure if this OU is really necessary.
+#add-unit.sh People
+#add-person.sh "Alexander Reitzel"
+
+# Not fully worked out yet.
 add-unit.sh groups
-add-person.sh "Alexander Reitzel"
+
+# Create an OU for users and add a user to it.
+add-unit.sh users
 add-account.sh "Alexander Reitzel"
 
 show-status.sh
