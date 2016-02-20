@@ -10,7 +10,7 @@ usage()
 }
 
 # shellcheck source=/dev/null
-. "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
+. "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
 VERB="${1}"
 FULL_NAME="${2}"
 

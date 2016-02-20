@@ -10,7 +10,7 @@ usage()
 }
 
 # shellcheck source=/dev/null
-. "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
+. "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
 VERB="${1}"
 
 if [ "${VERB}" = "test" ]; then
@@ -21,7 +21,8 @@ if [ "${VERB}" = "test" ]; then
     ${SEARCH_MANAGER} -b "${MANAGER_DN}" | grep -v '^$'
     echo
     echo "Password hash"
-    ${SEARCH_SOCKET} -b 'cn=config' 'olcDatabase=mdb' 'olcRootPW' | grep -v '^$'
+    #${SEARCH_SOCKET} -b 'cn=config' 'olcDatabase=mdb' 'olcRootPW' | grep -v '^$'
+    ${SEARCH_SOCKET} -b 'cn=config' 'olcDatabase=mdb'
 elif [ "${VERB}" = "new_password" ]; then
     echo "Enter new password:"
     read -r NEW_PASSWORD

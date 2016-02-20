@@ -10,7 +10,7 @@ usage()
 }
 
 # shellcheck source=/dev/null
-. "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
+. "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
 DOMAIN="${1}"
 
 if [ "${DOMAIN}" = "" ]; then
