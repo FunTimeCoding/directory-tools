@@ -18,6 +18,45 @@ top_level: org
 password: example
 ```
 
+Install OpenLDAP on Debian.
+
+```sh
+install.sh
+enable-security.sh
+```
+
+Change the manager password.
+
+```sh
+set-manager-password.sh admin
+```
+
+Create an organizational unit for people and add a person.
+
+```sh
+unit.sh add people
+person.sh add "Alexander Reitzel"
+```
+
+Create an organizational unit for POSIX accounts and add an account.
+
+```sh
+unit.sh add users
+user.sh add "Alexander Reitzel"
+```
+
+Show the whole suffix.
+
+```sh
+show-suffix.sh
+```
+
+Show debug information.
+
+```sh
+show-status.sh
+```
+
 
 ## Abbreviations
 
