@@ -38,11 +38,19 @@ unit.sh add people
 person.sh add "Alexander Reitzel"
 ```
 
+Create a group for a POSIX account.
+
+```sh
+unit.sh add groups
+group.sh add areitzel
+```
+
 Create an organizational unit for POSIX accounts and add an account.
 
 ```sh
 unit.sh add users
 user.sh add "Alexander Reitzel"
+group.sh add_user areitzel
 ```
 
 Show the whole suffix.

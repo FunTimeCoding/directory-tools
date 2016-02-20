@@ -9,5 +9,6 @@ if [ "${1}" = "--all" ]; then
     ${SEARCH_SOCKET} -b cn=config 'olcSuffix=*' olcSuffix | grep -v '^$'
 else
     echo "Enter manager password:"
-    ${SEARCH_MANAGER} -b "${SUFFIX}" | grep -v '^$'
+    #${SEARCH_MANAGER} -b "${SUFFIX}" | grep -v '^$'
+    ${SEARCH_MANAGER} -b "${SUFFIX}"
 fi
