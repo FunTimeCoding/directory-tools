@@ -5,7 +5,7 @@ SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 
 usage()
 {
-    echo "Usage: ${0} NEW_PASSWORD"
+    echo "Usage: ${0} [NEW_PASSWORD]"
     echo "Example: ${0} examplePassword"
 }
 
@@ -14,12 +14,10 @@ usage()
 NEW_PASSWORD="${1}"
 
 if [ "${NEW_PASSWORD}" = "" ]; then
-    usage
-
-    exit 1
-fi
-
-ENCRYPTED_PASSWORD=$(slappasswd -s "${NEW_PASSWORD}")
-echo "dn: olcDatabase={1}mdb,cn=config
+    ${SEARCH_SOCKET} -b 'olcDatabase=mdb,cn=config'
+else
+    ENCRYPTED_PASSWORD=$(slappasswd -s "${NEW_PASSWORD}")
+    echo "dn: olcDatabase={1}mdb,cn=config
 replace: olcRootPW
 olcRootPW: ${ENCRYPTED_PASSWORD}" | ${MODIFY_SOCKET}
+fi

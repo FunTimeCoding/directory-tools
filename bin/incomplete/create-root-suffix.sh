@@ -17,12 +17,15 @@ objectClass: olcMdbConfig
 olcDatabase: mdb
 olcDbDirectory: ${DATABASE_DIRECTORY}
 olcSuffix: ${SUFFIX}
-olcRootDN: cn=admin,${SUFFIX}
+olcRootDN: ${MANAGER_DN}
 olcRootPW: ${PASSWORD}
 olcDbIndex: objectClass eq" | ${ADD_SOCKET}
 fi
 
-echo "dn: olcDatabase={2}mdb,cn=config
+# TODO: Find out the exact index of the olcDatabase that was just created.
+INDEX="2"
+
+echo "dn: olcDatabase={${INDEX}}mdb,cn=config
 changeType: modify
 add: olcDbIndex
 olcDbIndex: uid eq" | ${MODIFY_SOCKET}
@@ -34,7 +37,7 @@ o: ${ORGANIZATION}
 dc: ${DOMAIN}
 description: ${ORGANIZATION} Organization" | ${ADD_MANAGER}
 
-echo "dn: olcDatabase={2}mdb,cn=config
+echo "dn: olcDatabase={${INDEX}}mdb,cn=config
 changeType: modify
 add: olcAccess
 olcAccess: to attrs=userPassword,shadowLastChange by self write by anonymous auth by * none
