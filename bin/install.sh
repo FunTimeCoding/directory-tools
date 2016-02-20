@@ -4,7 +4,6 @@ DIRECTORY=$(dirname "${0}")
 SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 # shellcheck source=/dev/null
 . "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
-sudo sh -c "echo \"slapd/root_password password string ${MANAGER_PASSWORD}\" | debconf-set-selections"
-sudo sh -c "echo \"slapd/root_password_again password string ${MANAGER_PASSWORD}\" | debconf-set-selections"
-sudo sh -c 'DEBIAN_FRONTEND=noninteractive apt-get install slapd'
-sudo apt-get install -qq ldap-utils nmap
+echo "slapd slapd/password1 password ${MANAGER_PASSWORD}" | sudo debconf-set-selections
+echo "slapd slapd/password2 password ${MANAGER_PASSWORD}" | sudo debconf-set-selections
+sudo apt-get install -qq slapd ldap-utils nmap
