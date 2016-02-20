@@ -19,6 +19,28 @@ password: example
 ```
 
 
+## Abbreviations
+
+* O - Organization
+* CN - Common Name
+* OU - Organizational Unit
+* DC - Domain Component
+* LDIF LDAP Data Interchange Format
+* DN - Distinguished Name
+* SN - Surname
+* BaseDN - Tree branch to work from.
+ * Alias: suffix
+ * Example: 'dc=example,dc=org'
+* BindDN - User who connects to the server.
+ * Example: 'cn=admin,dc=example,dc=org'
+* DSE - DSA Specific Entry.
+ * Alias: RootDSE
+* DSA - Directory System Agent
+* OLC - On-Line Configuration.
+ * Aliases: cn=config, slapd.d
+* DIT - Directory Information Tree. Sum of entries in the database.
+
+
 ## Setup
 
 This section explains how to install this project and how to include it in another.

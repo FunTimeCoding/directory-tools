@@ -73,8 +73,16 @@ else
     CONFIG=""
 fi
 
+# -Q - Disable SASL output.
+# -Y EXTERNAL - Use SASL mechanism EXTERNAL instead of specifying -D and -W.
+# -H 'ldapi:///' - LDAP URI to connect to.
+# -LLL - Reduce LDAP protocol output.
+# -D - BindDN needed when authenticating.
+# -W - Enter password interactively when authenticating.
+# -w - Pass password as argument when authenticating.
 SEARCH="sudo ldapsearch -o ldif-wrap=no -Q -Y EXTERNAL -H ldapi:/// -LLL"
 export SEARCH
+# Use slapcat if you want to confirm what ldapsearch is true.
 CAT="sudo slapcat -o ldif-wrap=no -F /etc/ldap/slapd.d"
 export CAT
 ADD="sudo ldapadd -Y EXTERNAL -H ldapi:///"
