@@ -48,13 +48,13 @@ user.sh add "Alexander Reitzel"
 Show the whole suffix.
 
 ```sh
-show-suffix.sh
+suffix.sh
 ```
 
 Show debug information.
 
 ```sh
-show-status.sh
+status.sh
 ```
 
 

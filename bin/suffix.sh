@@ -8,5 +8,6 @@ SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 if [ "${1}" = "--all" ]; then
     ${SEARCH_SOCKET} -b cn=config 'olcSuffix=*' olcSuffix | grep -v '^$'
 else
+    echo "Enter manager password:"
     ${SEARCH_MANAGER} -b "${SUFFIX}" | grep -v '^$'
 fi
