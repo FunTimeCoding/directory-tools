@@ -5,7 +5,7 @@ SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 
 usage()
 {
-    echo "Usage: ${0} add|delete|change_password|test FULL_NAME"
+    echo "Usage: ${0} add|delete|change_password|set_password|test FULL_NAME"
     echo "Example: ${0} \"John Doe\""
 }
 
@@ -51,13 +51,22 @@ elif [ "${VERB}" = "test" ]; then
     ${WHO} -D "${USER_DN}"
     echo "Self search"
     ${SEARCH} -D "uid=${USER_NAME},ou=users,${SUFFIX}" -b "uid=${USER_NAME},ou=users,${SUFFIX}"
+elif [ "${VERB}" = "set_password" ]; then
+    echo "Enter new password:"
+    read -r NEW_PASSWORD
+    ENCRYPTED_PASSWORD=$(slappasswd -s "${NEW_PASSWORD}")
+    echo "Enter manager password:"
+    echo "dn: ${USER_DN}
+replace: userPassword
+userPassword: ${ENCRYPTED_PASSWORD}" | ${MODIFY_MANAGER}
 elif [ "${VERB}" = "change_password" ]; then
     echo "Enter new password:"
     read -r NEW_PASSWORD
     ENCRYPTED_PASSWORD=$(slappasswd -s "${NEW_PASSWORD}")
+    echo "Enter current password:"
     echo "dn: ${USER_DN}
-    replace: userPassword
-    userPassword: ${ENCRYPTED_PASSWORD}" | ${MODIFY_MANAGER}
+replace: userPassword
+userPassword: ${ENCRYPTED_PASSWORD}" | ${MODIFY} -D "uid=${USER_NAME},ou=users,${SUFFIX}"
 elif [ "${VERB}" = "delete" ]; then
     ${DELETE_MANAGER} "${USER_DN}"
 else
