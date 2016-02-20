@@ -11,7 +11,6 @@ if [ -f "${DATABASE_DIRECTORY}" ]; then
 else
     sudo mkdir -p "${DATABASE_DIRECTORY}"
     sudo chown openldap:openldap "${DATABASE_DIRECTORY}"
-    INTERCHANGE_FILE="/tmp/create_tree.ldif"
     echo "dn: olcDatabase=mdb,cn=config
 objectClass: olcDatabaseConfig
 objectClass: olcMdbConfig
@@ -20,7 +19,5 @@ olcDbDirectory: ${DATABASE_DIRECTORY}
 olcSuffix: ${SUFFIX}
 olcRootDN: cn=admin,${SUFFIX}
 olcRootPW: ${PASSWORD}
-olcDbIndex: objectClass eq" > "${INTERCHANGE_FILE}"
-    ${ADD_SOCKET} -f "${INTERCHANGE_FILE}"
-    rm "${INTERCHANGE_FILE}"
+olcDbIndex: objectClass eq" | ${ADD_SOCKET}
 fi

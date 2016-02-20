@@ -20,9 +20,6 @@ if [ "${NEW_PASSWORD}" = "" ]; then
 fi
 
 ENCRYPTED_PASSWORD=$(slappasswd -s "${NEW_PASSWORD}")
-INTERCHANGE_FILE="/tmp/change_manager_password.ldif"
 echo "dn: olcDatabase={1}mdb,cn=config
 replace: olcRootPW
-olcRootPW: ${ENCRYPTED_PASSWORD}" > "${INTERCHANGE_FILE}"
-${MODIFY_SOCKET} -f "${INTERCHANGE_FILE}"
-rm "${INTERCHANGE_FILE}"
+olcRootPW: ${ENCRYPTED_PASSWORD}" | ${MODIFY_SOCKET}

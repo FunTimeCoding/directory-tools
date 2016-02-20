@@ -26,16 +26,13 @@ FIRST_LETTER=$(echo "${FIRST_NAME}" | head -c 1)
 USER_NAME=$(echo "${FIRST_LETTER}${LAST_NAME}" | sed 's/.*/\L&/')
 
 if [ "${VERB}" = "add" ]; then
-    INTERCHANGE_FILE="/tmp/people.ldif"
     echo "dn: uid=${USER_NAME},ou=people,${SUFFIX}
 objectClass: inetOrgPerson
 cn: ${FULL_NAME}
 sn: ${LAST_NAME}
-uid: ${USER_NAME}" > "${INTERCHANGE_FILE}"
-    ${ADD} -f "${INTERCHANGE_FILE}"
-    rm "${INTERCHANGE_FILE}"
+uid: ${USER_NAME}" | ${ADD_MANAGER}
 elif [ "${VERB}" = "delete" ]; then
-    ${DELETE} "uid=${USER_NAME},ou=people,${SUFFIX}"
+    ${DELETE_MANAGER} "uid=${USER_NAME},ou=people,${SUFFIX}"
 else
     usage
 

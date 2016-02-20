@@ -19,7 +19,6 @@ if [ "${DOMAIN}" = "" ]; then
     exit 1
 fi
 
-INTERCHANGE_FILE="/tmp/enable_security.ldif"
 echo "dn: cn=config
 changeType: modify
 replace: olcTLSCACertificateFile
@@ -29,6 +28,4 @@ replace: olcTLSCertificateKeyFile
 olcTLSCertificateKeyFile: /etc/ssl/private/ldap.${DOMAIN}.node-private-key.pem
 -
 replace: olcTLSCertificateFile
-olcTLSCertificateFile: /etc/ssl/certs/ldap.${DOMAIN}.node-certificate.pem" > "${INTERCHANGE_FILE}"
-${MODIFY_SOCKET} -f "${INTERCHANGE_FILE}"
-rm "${INTERCHANGE_FILE}"
+olcTLSCertificateFile: /etc/ssl/certs/ldap.${DOMAIN}.node-certificate.pem" | ${MODIFY_SOCKET}

@@ -21,14 +21,11 @@ if [ "${NAME}" = "" ]; then
 fi
 
 if [ "${VERB}" = "add" ]; then
-    INTERCHANGE_FILE="/tmp/unit.ldif"
     echo "dn: ou=${NAME},${SUFFIX}
 objectClass: organizationalUnit
-ou: ${NAME}" > "${INTERCHANGE_FILE}"
-    ${ADD} -f "${INTERCHANGE_FILE}"
-    rm "${INTERCHANGE_FILE}"
+ou: ${NAME}" | ${ADD_MANAGER}
 elif [ "${VERB}" = "delete" ]; then
-    ${DELETE} "dn: ou=${NAME},${SUFFIX}"
+    ${DELETE_MANAGER} "dn: ou=${NAME},${SUFFIX}"
 else
     usage
 
