@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+echo "This script is incomplete."
+exit 1
+
 DIRECTORY=$(dirname "${0}")
 SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 # shellcheck source=/dev/null
