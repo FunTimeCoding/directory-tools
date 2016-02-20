@@ -21,6 +21,6 @@ olcSuffix: ${SUFFIX}
 olcRootDN: cn=admin,${SUFFIX}
 olcRootPW: ${PASSWORD}
 olcDbIndex: objectClass eq" > "${INTERCHANGE_FILE}"
-    ${ADD} -f "${INTERCHANGE_FILE}"
+    ${ADD_SOCKET} -f "${INTERCHANGE_FILE}"
     rm "${INTERCHANGE_FILE}"
 fi

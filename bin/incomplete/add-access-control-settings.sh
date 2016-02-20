@@ -13,5 +13,5 @@ add: olcAccess
 olcAccess: to dn.base=\"\" by * read
 add: olcAccess
 olcAccess: to * by * read" > "${INTERCHANGE_FILE}"
-${MODIFY} -f "${INTERCHANGE_FILE}"
+${MODIFY_SOCKET} -f "${INTERCHANGE_FILE}"
 rm "${INTERCHANGE_FILE}"

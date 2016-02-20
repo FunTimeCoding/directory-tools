@@ -9,5 +9,5 @@ echo "dn: olcDatabase={2}mdb,cn=config
 changeType: modify
 add: olcDbIndex
 olcDbIndex: uid eq" > "${INTERCHANGE_FILE}"
-${MODIFY} -f "${INTERCHANGE_FILE}"
+${MODIFY_SOCKET} -f "${INTERCHANGE_FILE}"
 rm "${INTERCHANGE_FILE}"

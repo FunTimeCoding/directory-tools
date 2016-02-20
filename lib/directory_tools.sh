@@ -81,33 +81,62 @@ ORGANIZATION="${DOMAIN_UPPER_CASE} Organization"
 export ORGANIZATION
 
 # Use slapcat if you want to confirm what ldapsearch is true.
-CAT="sudo slapcat -o ldif-wrap=no -F /etc/ldap/slapd.d"
+CAT="sudo slapcat -F /etc/ldap/slapd.d -o ldif-wrap=no"
 export CAT
 
-# Used arguments.
-# -H ldap://ldap.shiin.org - Connect via TCP.
-# -LLL - Reduce LDAP protocol output.
-# -D - BindDN needed when authenticating.
-# -W - Enter password interactively when authenticating.
+# -Q - Reduce SASL output.
+# -LLL - Reduce LDAP output.
 
-# Arguments to avoid:
+# For network connections.
+# -H ldap://ldap.example.org - Connect via TCP.
+# -D - BindDN needed when authenticating.
+# -W - Enter password interactively.
+
+# For socket file connections.
 # -H ldapi:/// - Connect via socket file.
-# -x - Use simple authentication. This is not what I want.
+# -Y EXTERNAL - Use SASL mechanism EXTERNAL, as opposed to specifying -D and -W.
+
+# Avoid using these.
+# -x - Use simple authentication.
 # -w - Pass password as argument when authenticating.
 
-# Arguments to examine:
-# -Y EXTERNAL - Use SASL mechanism EXTERNAL instead of specifying -D and -W.
+HOST_NAME="ldap.shiin.org"
+HOST_PARAMETER="ldap://${HOST_NAME}"
 
-# Confirm locally that the manager exists and can log in.
-#ldapwhoami -D cn=admin,dc=shiin,dc=org -W
-# Confirm remotely that the manager exists and can log in.
-#ldapwhoami -H ldap://ldap.shiin.org -D 'cn=admin,dc=shiin,dc=org' -W
-
-SEARCH="ldapsearch -o ldif-wrap=no -LLL -H ldap://ldap.shiin.org -D cn=admin,${SUFFIX} -W"
-export SEARCH
-ADD="ldapadd -H ldap://ldap.shiin.org -D cn=admin,${SUFFIX} -W"
+# Basic reusable commands.
+WHO="ldapwhoami -H ${HOST_PARAMETER} -W"
+export WHO
+SEARCH="ldapsearch -H ${HOST_PARAMETER} -W -LLL -o ldif-wrap=no"
+export SEARCH_MANAGER
+ADD="ldapadd -H ${HOST_PARAMETER} -W"
 export ADD
-DELETE="ldapdelete -H ldap://ldap.shiin.org -D cn=admin,${SUFFIX} -W"
-export DELETE
-MODIFY="ldapmodify -H ldap://ldap.shiin.org -D cn=admin,${SUFFIX} -W"
+MODIFY="ldapmodify -H ${HOST_PARAMETER} -W"
 export MODIFY
+DELETE="ldapdelete -H ${HOST_PARAMETER} -W"
+export DELETE
+
+MANAGER_DN="cn=admin,${SUFFIX}"
+
+# Convenience commands for manager access.
+WHO_MANAGER="${WHO} -D ${MANAGER_DN}"
+export WHO_MANAGER
+SEARCH_MANAGER="${SEARCH} -D ${MANAGER_DN}"
+export SEARCH_MANAGER
+ADD_MANAGER="${ADD} -D ${MANAGER_DN}"
+export ADD_MANAGER
+MODIFY_MANAGER="${MODIFY} -D ${MANAGER_DN}"
+export MODIFY_MANAGER
+DELETE_MANAGER="${DELETE} -D ${MANAGER_DN}"
+export DELETE_MANAGER
+
+# Access to cn=config requires socket access, so these must be run as root.
+WHO_SOCKET="sudo ldapwhoami -H ldapi:/// -Y EXTERNAL -Q"
+export WHO_SOCKET
+SEARCH_SOCKET="sudo ldapsearch -H ldapi:/// -Y EXTERNAL -Q -LLL -o ldif-wrap=no"
+export SEARCH_SOCKET
+ADD_SOCKET="sudo ldapadd -H ldapi:/// -Y EXTERNAL -Q"
+export ADD_SOCKET
+MODIFY_SOCKET="sudo ldapmodify -H ldapi:/// -Y EXTERNAL -Q"
+export MODIFY_SOCKET
+DELETE_SOCKET="sudo ldapdelete -H ldapi:/// -Y EXTERNAL -Q"
+export DELETE_SOCKET

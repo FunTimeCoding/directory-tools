@@ -20,14 +20,14 @@ if [ "${FULL_NAME}" = "" ]; then
     exit 1
 fi
 
-INTERCHANGE_FILE="/tmp/person.ldif"
 FIRST_NAME="${FULL_NAME% *}"
 LAST_NAME="${FULL_NAME#* }"
 FIRST_LETTER=$(echo "${FIRST_NAME}" | head -c 1)
 USER_NAME=$(echo "${FIRST_LETTER}${LAST_NAME}" | sed 's/.*/\L&/')
 
 if [ "${VERB}" = "add" ]; then
-    echo "dn: uid=${USER_NAME},ou=People,${SUFFIX}
+    INTERCHANGE_FILE="/tmp/people.ldif"
+    echo "dn: uid=${USER_NAME},ou=people,${SUFFIX}
 objectClass: inetOrgPerson
 cn: ${FULL_NAME}
 sn: ${LAST_NAME}
@@ -35,10 +35,7 @@ uid: ${USER_NAME}" > "${INTERCHANGE_FILE}"
     ${ADD} -f "${INTERCHANGE_FILE}"
     rm "${INTERCHANGE_FILE}"
 elif [ "${VERB}" = "delete" ]; then
-    echo "dn: uid=${USER_NAME},ou=People,${SUFFIX}
-changeType: delete" > "${INTERCHANGE_FILE}"
-    ${MODIFY} -f "${INTERCHANGE_FILE}"
-    rm "${INTERCHANGE_FILE}"
+    ${DELETE} "uid=${USER_NAME},ou=people,${SUFFIX}"
 else
     usage
 

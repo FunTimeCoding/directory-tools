@@ -24,5 +24,5 @@ INTERCHANGE_FILE="/tmp/change_manager_password.ldif"
 echo "dn: olcDatabase={1}mdb,cn=config
 replace: olcRootPW
 olcRootPW: ${ENCRYPTED_PASSWORD}" > "${INTERCHANGE_FILE}"
-${MODIFY} -f "${INTERCHANGE_FILE}"
+${MODIFY_SOCKET} -f "${INTERCHANGE_FILE}"
 rm "${INTERCHANGE_FILE}"

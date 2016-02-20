@@ -6,7 +6,7 @@ SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 . "${SCRIPT_DIRECTORY}/../lib/directory_tools.sh"
 
 if [ "${1}" = "--full" ]; then
-    ${SEARCH} -b cn=schema,cn=config
+    ${SEARCH_SOCKET} -b cn=schema,cn=config
 else
-    ${SEARCH} -b cn=schema,cn=config '(objectClass=olcSchemaConfig)' dn | grep -v '^$'
+    ${SEARCH_SOCKET} -b cn=schema,cn=config '(objectClass=olcSchemaConfig)' dn | grep -v '^$'
 fi

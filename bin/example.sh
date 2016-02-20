@@ -1,8 +1,10 @@
 #!/bin/sh -e
 
 install.sh
-set-manager-password.sh admin
 enable-security.sh
+
+# Change the manager password
+set-manager-password.sh admin
 
 # Create a second database.
 #create-tree.sh
@@ -13,15 +15,15 @@ enable-security.sh
 #add-access-control-settings.sh
 
 # Not sure if this OU is really necessary.
-#unit.sh add People
-#person.sh add "Alexander Reitzel"
+#unit.sh add people
+#people.sh add "Alexander Reitzel"
 
 # Not fully worked out yet.
 unit.sh add groups
 
 # Create an OU for users and add a user to it.
 unit.sh add users
-account.sh add "Alexander Reitzel"
+user.sh add "Alexander Reitzel"
 
 # Show the created suffix.
 show-suffix.sh

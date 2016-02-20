@@ -20,20 +20,15 @@ if [ "${NAME}" = "" ]; then
     exit 1
 fi
 
-INTERCHANGE_FILE="/tmp/unit.ldif"
-
 if [ "${VERB}" = "add" ]; then
+    INTERCHANGE_FILE="/tmp/unit.ldif"
     echo "dn: ou=${NAME},${SUFFIX}
-objectClass: top
 objectClass: organizationalUnit
 ou: ${NAME}" > "${INTERCHANGE_FILE}"
     ${ADD} -f "${INTERCHANGE_FILE}"
     rm "${INTERCHANGE_FILE}"
 elif [ "${VERB}" = "delete" ]; then
-    echo "dn: ou=${NAME},${SUFFIX}
-changeType: delete" > "${INTERCHANGE_FILE}"
-    ${MODIFY} -f "${INTERCHANGE_FILE}"
-    rm "${INTERCHANGE_FILE}"
+    ${DELETE} "dn: ou=${NAME},${SUFFIX}"
 else
     usage
 

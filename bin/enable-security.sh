@@ -30,5 +30,5 @@ olcTLSCertificateKeyFile: /etc/ssl/private/ldap.${DOMAIN}.node-private-key.pem
 -
 replace: olcTLSCertificateFile
 olcTLSCertificateFile: /etc/ssl/certs/ldap.${DOMAIN}.node-certificate.pem" > "${INTERCHANGE_FILE}"
-${MODIFY} -f "${INTERCHANGE_FILE}"
+${MODIFY_SOCKET} -f "${INTERCHANGE_FILE}"
 rm "${INTERCHANGE_FILE}"
