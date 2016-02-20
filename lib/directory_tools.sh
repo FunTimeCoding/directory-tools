@@ -73,27 +73,41 @@ else
     CONFIG=""
 fi
 
-# -Q - Disable SASL output.
-# -Y EXTERNAL - Use SASL mechanism EXTERNAL instead of specifying -D and -W.
-# -H 'ldapi:///' - LDAP URI to connect to.
-# -LLL - Reduce LDAP protocol output.
-# -D - BindDN needed when authenticating.
-# -W - Enter password interactively when authenticating.
-# -w - Pass password as argument when authenticating.
-SEARCH="sudo ldapsearch -o ldif-wrap=no -Q -Y EXTERNAL -H ldapi:/// -LLL"
-export SEARCH
-# Use slapcat if you want to confirm what ldapsearch is true.
-CAT="sudo slapcat -o ldif-wrap=no -F /etc/ldap/slapd.d"
-export CAT
-ADD="sudo ldapadd -Y EXTERNAL -H ldapi:///"
-export ADD
-DELETE="sudo ldapdelete -Y EXTERNAL -H ldapi:///"
-export DELETE
-MODIFY="sudo ldapmodify -Y EXTERNAL -H ldapi:///"
-export MODIFY
 SUFFIX="dc=${DOMAIN},dc=${TOP_LEVEL}"
 export SUFFIX
 DOMAIN_UPPER_CASE=$(echo "${DOMAIN}" | sed 's/.*/\u&/')
 export DOMAIN_UPPER_CASE
 ORGANIZATION="${DOMAIN_UPPER_CASE} Organization"
 export ORGANIZATION
+
+# Use slapcat if you want to confirm what ldapsearch is true.
+CAT="sudo slapcat -o ldif-wrap=no -F /etc/ldap/slapd.d"
+export CAT
+
+# Used arguments.
+# -H ldap://ldap.shiin.org - Connect via TCP.
+# -LLL - Reduce LDAP protocol output.
+# -D - BindDN needed when authenticating.
+# -W - Enter password interactively when authenticating.
+
+# Arguments to avoid:
+# -H ldapi:/// - Connect via socket file.
+# -x - Use simple authentication. This is not what I want.
+# -w - Pass password as argument when authenticating.
+
+# Arguments to examine:
+# -Y EXTERNAL - Use SASL mechanism EXTERNAL instead of specifying -D and -W.
+
+# Confirm locally that the manager exists and can log in.
+#ldapwhoami -D cn=admin,dc=shiin,dc=org -W
+# Confirm remotely that the manager exists and can log in.
+#ldapwhoami -H ldap://ldap.shiin.org -D 'cn=admin,dc=shiin,dc=org' -W
+
+SEARCH="ldapsearch -o ldif-wrap=no -LLL -H ldap://ldap.shiin.org -D cn=admin,${SUFFIX} -W"
+export SEARCH
+ADD="ldapadd -H ldap://ldap.shiin.org -D cn=admin,${SUFFIX} -W"
+export ADD
+DELETE="ldapdelete -H ldap://ldap.shiin.org -D cn=admin,${SUFFIX} -W"
+export DELETE
+MODIFY="ldapmodify -H ldap://ldap.shiin.org -D cn=admin,${SUFFIX} -W"
+export MODIFY

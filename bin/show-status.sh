@@ -25,12 +25,3 @@ ${CAT} -b cn=config -a 'olcTLSCertificateFile=*'
 
 echo "# Suffix"
 ${SEARCH} -b "${SUFFIX}"
-
-echo "# Security check 1"
-OUTPUT=$(gnutls-cli-debug -p 636 "ldap.${DOMAIN}.${TOP_LEVEL}" 2>/dev/null)
-OUTPUT=$(echo "${OUTPUT}" | grep -v 'unknown protocol ldaps')
-echo "${OUTPUT}"
-echo
-
-echo "# Security check 2"
-nmap -Pn -p T:636 --script ssl-enum-ciphers localhost

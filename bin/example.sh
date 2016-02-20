@@ -13,14 +13,18 @@ enable-security.sh
 #add-access-control-settings.sh
 
 # Not sure if this OU is really necessary.
-#add-unit.sh People
-#add-person.sh "Alexander Reitzel"
+#unit.sh add People
+#person.sh add "Alexander Reitzel"
 
 # Not fully worked out yet.
-add-unit.sh groups
+unit.sh add groups
 
 # Create an OU for users and add a user to it.
-add-unit.sh users
-add-account.sh "Alexander Reitzel"
+unit.sh add users
+account.sh add "Alexander Reitzel"
 
-show-status.sh
+# Show the created suffix.
+show-suffix.sh
+
+# Show a lot of debug information.
+#show-status.sh
