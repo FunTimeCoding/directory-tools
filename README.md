@@ -15,7 +15,7 @@ Configure `~/.directory-tools.yml`.
 ```yml
 domain: example
 top_level: org
-password: example
+manager-password: example
 ```
 
 Install OpenLDAP on Debian.
