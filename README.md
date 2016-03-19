@@ -61,7 +61,7 @@ Show the whole suffix.
 suffix.sh
 ```
 
-Show debug information.
+Show status information.
 
 ```sh
 status.sh
