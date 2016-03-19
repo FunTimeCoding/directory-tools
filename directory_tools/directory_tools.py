@@ -18,6 +18,13 @@ class DirectoryTools:
         self.manager_password = config.get('manager-password')
         self.server_name = host + '.' + domain + '.' + top_level
 
+    @staticmethod
+    def create_parser() -> CustomArgumentParser:
+        description = 'Directory administration tool.'
+        parser = CustomArgumentParser(description=description)
+
+        return parser
+
     def parse_arguments(self, arguments: list) -> list:
         parser = self.create_parser()
         parsed_arguments = parser.parse_args(arguments)
@@ -94,10 +101,3 @@ class DirectoryTools:
         print(response)
 
         return 0
-
-    @staticmethod
-    def create_parser() -> CustomArgumentParser:
-        description = 'Directory administration tool.'
-        parser = CustomArgumentParser(description=description)
-
-        return parser
