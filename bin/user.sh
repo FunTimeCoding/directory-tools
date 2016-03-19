@@ -30,19 +30,19 @@ USER_DN="uid=${USER_NAME},ou=users,${SUFFIX}"
 if [ "${VERB}" = "add" ]; then
     USER_NUMBER="${3}"
 
-	if [ "${USER_NUMBER}" = "" ]; then
-		USER_NUMBER_FILE="user_number.txt"
+    if [ "${USER_NUMBER}" = "" ]; then
+        USER_NUMBER_FILE="user_number.txt"
 
-		if [ ! -f "${USER_NUMBER_FILE}" ]; then
-			echo "2000" > "${USER_NUMBER_FILE}"
-    	fi
+        if [ ! -f "${USER_NUMBER_FILE}" ]; then
+            echo "2000" > "${USER_NUMBER_FILE}"
+        fi
 
-    	USER_NUMBER=$(cat "${USER_NUMBER_FILE}")
-	fi
+        USER_NUMBER=$(cat "${USER_NUMBER_FILE}")
+    fi
 
     echo "USER_NUMBER: ${USER_NUMBER}"
-	echo "Enter group number:"
-	read -r GROUP_NUMBER
+    echo "Enter group number:"
+    read -r GROUP_NUMBER
     echo "dn: ${USER_DN}
 objectClass: inetOrgPerson
 objectClass: posixAccount

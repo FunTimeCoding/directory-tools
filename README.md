@@ -13,8 +13,10 @@ PYTHONPATH=. bin/dt
 Configure `~/.directory-tools.yml`.
 
 ```yml
+host: ldap
 domain: example
 top_level: org
+manager-name: example
 manager-password: example
 ```
 
