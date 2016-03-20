@@ -1,8 +1,9 @@
+from _ssl import PROTOCOL_TLSv1_2
 from os import path
-from ssl import CERT_REQUIRED
 
-from ldap3 import LDAPSocketOpenError, LDAPBindError
-from ldap3 import Server, Connection, Tls, AUTH_SIMPLE, STRATEGY_SYNC
+from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, AUTH_SIMPLE
+from ldap3 import LDAPSocketOpenError, LDAPBindError, LDAPStartTLSError
+from ldap3 import Server, Connection, Tls
 
 
 class Client:
@@ -12,7 +13,6 @@ class Client:
         manager_dn: str,
         manager_password: str,
         suffix: str,
-
     ):
         self._server_name = server_name
         self._manager_dn = manager_dn
@@ -26,9 +26,12 @@ class Client:
             base_path, '..', 'ldap.shiin.org.node-certificate.crt'
         )
 
+        # TODO: Is CERT_REQUIRED really necessary?
+        # TODO: Why is PROTOCOL_SSLv23 possible?
         tls = Tls(
-            validate=CERT_REQUIRED,
-            ca_certs_file=certificate_path
+            # validate=CERT_REQUIRED,
+            ca_certs_file=certificate_path,
+            version=PROTOCOL_TLSv1_2
         )
 
         return Server(
@@ -47,14 +50,11 @@ class Client:
         try:
             connection = Connection(
                 server,
-                auto_bind=True,
-                version=3,
-                client_strategy=STRATEGY_SYNC,
+                auto_bind=AUTO_BIND_TLS_BEFORE_BIND,
                 user=self._manager_dn,
                 password=self._manager_password,
                 authentication=AUTH_SIMPLE,
-                lazy=False,
-                check_names=False
+                version=3
             )
         except LDAPSocketOpenError as exception:
             print(str(exception))
@@ -64,6 +64,10 @@ class Client:
             print(str(exception))
 
             exit(2)
+        except LDAPStartTLSError as exception:
+            print(str(exception))
+
+            exit(3)
 
         return connection
 
