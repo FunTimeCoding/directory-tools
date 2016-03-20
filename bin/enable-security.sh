@@ -29,3 +29,13 @@ olcTLSCertificateKeyFile: /etc/ssl/private/ldap.${DOMAIN}.node-private-key.pem
 -
 replace: olcTLSCertificateFile
 olcTLSCertificateFile: /etc/ssl/certs/ldap.${DOMAIN}.node-certificate.pem" | ${MODIFY_SOCKET}
+
+echo "dn: cn=config
+changeType: modify
+add: olcDisallows
+olcDisallows: bind_anon" | ${MODIFY_SOCKET}
+
+echo "dn: olcDatabase={1}mdb,cn=config
+changeType: modify
+add: olcRequires
+olcRequires: authc" | ${MODIFY_SOCKET}
