@@ -1,7 +1,7 @@
 from os import path
 from ssl import CERT_REQUIRED
 
-from ldap3 import LDAPSocketOpenError
+from ldap3 import LDAPSocketOpenError, LDAPBindError
 from ldap3 import Server, Connection, Tls, AUTH_SIMPLE, STRATEGY_SYNC
 
 
@@ -41,6 +41,9 @@ class Client:
     def _create_connection(self) -> Connection:
         server = self._create_server()
 
+        # PyCharm wants this to not complain on return.
+        connection = None
+
         try:
             connection = Connection(
                 server,
@@ -56,7 +59,11 @@ class Client:
         except LDAPSocketOpenError as exception:
             print(str(exception))
 
-            raise exception
+            exit(1)
+        except LDAPBindError as exception:
+            print(str(exception))
+
+            exit(2)
 
         return connection
 
@@ -87,8 +94,12 @@ class Client:
 
         return response
 
+    def response_to_json(self, response) -> str:
+        return self._connection.response_to_json(response)
+
     def search_user(self, query: str) -> any:
         attributes = [
+            'cn',
             'uid',
             'displayName',
             'uidNumber',

@@ -1,4 +1,5 @@
 from python_utility.yaml_config import YamlConfig
+from yaml import dump
 
 from directory_tools.argument_parser import Parser
 from directory_tools.client import Client
@@ -32,6 +33,18 @@ class DirectoryTools:
 
         return self._client
 
+    @staticmethod
+    def print_response(response: list) -> None:
+        for element in response:
+            attributes = element['attributes']
+            clean_attributes = {}
+
+            for key, value in attributes.items():
+                clean_attributes[key] = ','.join(value)
+
+            markup_language = dump(clean_attributes, default_flow_style=False)
+            print(markup_language.strip())
+
     def run(self) -> int:
         exit_code = 0
         arguments = self._parsed_arguments
@@ -43,23 +56,28 @@ class DirectoryTools:
             elif 'delete' in arguments:
                 pass
             elif 'search' in arguments:
-                query = '(uid' + arguments.user_name + ')'
                 client = self._lazy_get_client()
-                response = client.search_user(query=query)
-                print(response)
+
+                if arguments.user_name is not None:
+                    query = '(uid=' + arguments.user_name + ')'
+                else:
+                    query = '(cn=' + arguments.full_name + ')'
+
+                response = client.search_user(query)
+                self.print_response(response)
             elif 'list' in arguments:
-                pass
+                client = self._lazy_get_client()
+                response = client.search_user('ou=users,dc=shiin,dc=org')
+                self.print_response(response)
             else:
                 parser.print_help()
         elif 'status' in arguments:
             client = self._lazy_get_client()
-            query = '(cn=admin)'
-            attributes = ['cn', 'description']
             response = client.search(
-                query=query,
-                attributes=attributes
+                '(cn=admin)',
+                ['cn', 'description']
             )
-            print(response)
+            self.print_response(response)
         else:
             parser.print_help()
 
