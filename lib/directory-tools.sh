@@ -129,6 +129,11 @@ export MODIFY_MANAGER
 DELETE_MANAGER="${DELETE} -D ${MANAGER_DN}"
 export DELETE_MANAGER
 
+MODIFY_PASSWORD="ldapmodify -H ${HOST_PARAMETER}"
+export MODIFY_PASSWORD
+MODIFY_MANAGER_PASSWORD="${MODIFY_PASSWORD} -D ${MANAGER_DN}"
+export MODIFY_MANAGER_PASSWORD
+
 # Access to cn=config requires socket access, so these must be run as root.
 WHO_SOCKET="sudo ldapwhoami -H ldapi:/// -Y EXTERNAL -Q"
 export WHO_SOCKET
