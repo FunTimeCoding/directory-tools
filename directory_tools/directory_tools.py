@@ -33,7 +33,7 @@ class DirectoryTools:
         return self._client
 
     def run(self) -> int:
-        result = 0
+        exit_code = 0
         arguments = self._parsed_arguments
         parser = self._parser
 
@@ -45,8 +45,7 @@ class DirectoryTools:
             elif 'search' in arguments:
                 query = '(uid' + arguments.user_name + ')'
                 client = self._lazy_get_client()
-                response, result = client.search_user(query)
-                print(result)
+                response = client.search_user(query=query)
                 print(response)
             elif 'list' in arguments:
                 pass
@@ -54,13 +53,14 @@ class DirectoryTools:
                 parser.print_help()
         elif 'status' in arguments:
             client = self._lazy_get_client()
-            response, result = client.search(
-                query='(cn=admin)',
-                attributes=['cn', 'description']
+            query = '(cn=admin)'
+            attributes = ['cn', 'description']
+            response = client.search(
+                query=query,
+                attributes=attributes
             )
-            print(result)
             print(response)
         else:
             parser.print_help()
 
-        return result
+        return exit_code

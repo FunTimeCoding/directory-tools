@@ -64,17 +64,16 @@ class Client:
         if self._connection is None:
             self._connection = self._create_connection()
 
-        return Connection
+        return self._connection
 
-    def search(self, query: str, attributes: list) -> [any, object]:
+    def search(self, query: str, attributes: list) -> any:
         connection = self._lazy_get_connection()
+        suffix = self._suffix
         result = connection.search(
-            search_base=self._suffix,
+            search_base=suffix,
             search_filter=query,
             attributes=attributes
         )
-
-        # TODO: Distinguish better between result and response.
 
         if isinstance(result, bool):
             response = connection.response
@@ -82,12 +81,13 @@ class Client:
         else:
             response, result = connection.get_response(result)
 
-        print('response type: ' + str(type(response)))
-        print('result type: ' + str(type(result)))
+        # TODO: See about handling errors based on result.
+        if result['result'] is not 0:
+            print('Result was not 0.')
 
-        return response, result
+        return response
 
-    def search_user(self, query: str) -> [any, object]:
+    def search_user(self, query: str) -> any:
         attributes = [
             'uid',
             'displayName',

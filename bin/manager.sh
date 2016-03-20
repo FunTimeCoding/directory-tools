@@ -30,6 +30,10 @@ elif [ "${VERB}" = "new_password" ]; then
     echo "dn: olcDatabase={1}mdb,cn=config
 replace: olcRootPW
 olcRootPW: ${ENCRYPTED_PASSWORD}" | ${MODIFY_SOCKET}
+    echo "dn: cn=admin,${SUFFIX}
+changeType: modify
+replace: userPassword
+userPassword: ${ENCRYPTED_PASSWORD}" | ${MODIFY_SOCKET}
 else
     usage
 
