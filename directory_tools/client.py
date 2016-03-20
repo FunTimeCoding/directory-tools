@@ -99,4 +99,4 @@ class Client:
             'mail'
         ]
 
-        return self.search(query, attributes)
+        return self.search(query=query, attributes=attributes)
