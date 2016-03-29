@@ -13,9 +13,8 @@ usage()
 . "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
 VERB="${1}"
 USERNAME="${2}"
-FULL_NAME="${3}"
 
-if [ "${VERB}" = "" ] || [ "${USERNAME}" = "" ] || [ "${FULL_NAME}" = "" ]; then
+if [ "${VERB}" = "" ] || [ "${USERNAME}" = "" ]; then
     usage
 
     exit 1
@@ -29,6 +28,14 @@ USER_PASSWORD=$(slappasswd -s "${USERNAME}")
 USER_DN="uid=${USERNAME},ou=users,${SUFFIX}"
 
 if [ "${VERB}" = "add" ]; then
+    FULL_NAME="${3}"
+
+    if [ "${FULL_NAME}" = "" ]; then
+        usage
+
+        exit 1
+    fi
+
     USER_NUMBER="${4}"
 
     if [ "${USER_NUMBER}" = "" ]; then
