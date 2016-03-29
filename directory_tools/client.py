@@ -1,7 +1,8 @@
-from _ssl import PROTOCOL_TLSv1_2
+from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
 from os import path
 
 from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, AUTH_SIMPLE
+from ldap3 import LDAPSSLConfigurationError
 from ldap3 import LDAPSocketOpenError, LDAPBindError, LDAPStartTLSError
 from ldap3 import Server, Connection, Tls
 
@@ -22,17 +23,23 @@ class Client:
 
     def _create_server(self) -> Server:
         base_path = path.dirname(path.realpath(__file__))
-        certificate_path = path.join(
+        ca_certificates_file = path.join(
             base_path, '..', 'ldap.shiin.org.node-certificate.crt'
         )
+        print(ca_certificates_file)
+        tls = None
 
-        # TODO: Is CERT_REQUIRED really necessary?
-        # TODO: Why is PROTOCOL_SSLv23 possible?
-        tls = Tls(
-            # validate=CERT_REQUIRED,
-            ca_certs_file=certificate_path,
-            version=PROTOCOL_TLSv1_2
-        )
+        try:
+            # TODO: Why is PROTOCOL_SSLv23 possible?
+            tls = Tls(
+                validate=CERT_REQUIRED,
+                ca_certs_file=ca_certificates_file,
+                version=PROTOCOL_TLSv1_2
+            )
+        except LDAPSSLConfigurationError as exception:
+            print(str(exception))
+
+            exit(4)
 
         return Server(
             host=self._server_name,
