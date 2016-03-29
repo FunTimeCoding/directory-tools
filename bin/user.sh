@@ -5,16 +5,17 @@ SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 
 usage()
 {
-    echo "Usage: ${0} add|delete|change_password|set_password|test FULL_NAME [USER_NUMBER]"
-    echo "Example: ${0} \"John Doe\""
+    echo "Usage: ${0} add|delete|change_password|set_password|test USERNAME FULL_NAME [USER_NUMBER]"
+    echo "Example: ${0} jd \"John Doe\""
 }
 
 # shellcheck source=/dev/null
 . "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
 VERB="${1}"
-FULL_NAME="${2}"
+USERNAME="${2}"
+FULL_NAME="${3}"
 
-if [ "${FULL_NAME}" = "" ]; then
+if [ "${VERB}" = "" ] || [ "${USERNAME}" = "" ] || [ "${FULL_NAME}" = "" ]; then
     usage
 
     exit 1
@@ -23,12 +24,12 @@ fi
 FIRST_NAME="${FULL_NAME% *}"
 LAST_NAME="${FULL_NAME#* }"
 FIRST_LETTER=$(echo "${FIRST_NAME}" | head -c 1)
-USER_NAME=$(echo "${FIRST_LETTER}${LAST_NAME}" | sed 's/.*/\L&/')
-USER_PASSWORD=$(slappasswd -s "${USER_NAME}")
-USER_DN="uid=${USER_NAME},ou=users,${SUFFIX}"
+USERNAME=$(echo "${FIRST_LETTER}${LAST_NAME}" | sed 's/.*/\L&/')
+USER_PASSWORD=$(slappasswd -s "${USERNAME}")
+USER_DN="uid=${USERNAME},ou=users,${SUFFIX}"
 
 if [ "${VERB}" = "add" ]; then
-    USER_NUMBER="${3}"
+    USER_NUMBER="${4}"
 
     if [ "${USER_NUMBER}" = "" ]; then
         USER_NUMBER_FILE="user_number.txt"
@@ -49,15 +50,15 @@ objectClass: posixAccount
 objectClass: shadowAccount
 cn: ${FULL_NAME}
 sn: ${LAST_NAME}
-uid: ${USER_NAME}
+uid: ${USERNAME}
 uidNumber: ${USER_NUMBER}
 gidNumber: ${GROUP_NUMBER}
-homeDirectory: /home/${USER_NAME}
+homeDirectory: /home/${USERNAME}
 loginShell: /bin/bash
-gecos: ${USER_NAME}
+gecos: ${FULL_NAME}
 userPassword: ${USER_PASSWORD}
-displayName: ${USER_NAME}
-mail: ${USER_NAME}@${DOMAIN}.${TOP_LEVEL}
+displayName: ${USERNAME}
+mail: ${USERNAME}@${DOMAIN}.${TOP_LEVEL}
 shadowLastChange: 0
 shadowMax: 0
 shadowWarning: 0" | ${ADD_MANAGER}
@@ -67,7 +68,7 @@ elif [ "${VERB}" = "test" ]; then
     echo "Who am I?"
     ${WHO} -D "${USER_DN}"
     echo "Self search"
-    ${SEARCH} -D "uid=${USER_NAME},ou=users,${SUFFIX}" -b "uid=${USER_NAME},ou=users,${SUFFIX}"
+    ${SEARCH} -D "uid=${USERNAME},ou=users,${SUFFIX}" -b "uid=${USERNAME},ou=users,${SUFFIX}"
 elif [ "${VERB}" = "set_password" ]; then
     echo "Enter new password:"
     read -r NEW_PASSWORD
@@ -83,11 +84,7 @@ elif [ "${VERB}" = "change_password" ]; then
     echo "Enter current password:"
     echo "dn: ${USER_DN}
 replace: userPassword
-userPassword: ${ENCRYPTED_PASSWORD}" | ${MODIFY} -D "uid=${USER_NAME},ou=users,${SUFFIX}"
+userPassword: ${ENCRYPTED_PASSWORD}" | ${MODIFY} -D "uid=${USERNAME},ou=users,${SUFFIX}"
 elif [ "${VERB}" = "delete" ]; then
     ${DELETE_MANAGER} "${USER_DN}"
-else
-    usage
-
-    exit 1
 fi
