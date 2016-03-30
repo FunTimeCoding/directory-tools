@@ -23,10 +23,7 @@ class Client:
 
     def _create_server(self) -> Server:
         base_path = path.dirname(path.realpath(__file__))
-        ca_certificates_file = path.join(
-            base_path, '..', 'ldap.shiin.org.node-certificate.crt'
-        )
-        print(ca_certificates_file)
+        ca_certificates_file = path.join(base_path, 'ca_certs.pem')
         tls = None
 
         try:
@@ -37,7 +34,9 @@ class Client:
                 version=PROTOCOL_TLSv1_2
             )
         except LDAPSSLConfigurationError as exception:
-            print(str(exception))
+            print('LDAPSSLConfigurationError: ' + str(exception))
+            print('ca_certificates_file: ' + ca_certificates_file)
+            print('server_name: ' + self._server_name)
 
             exit(4)
 
@@ -64,15 +63,16 @@ class Client:
                 version=3
             )
         except LDAPSocketOpenError as exception:
-            print(str(exception))
+            print('LDAPSocketOpenError: ' + str(exception))
 
             exit(1)
         except LDAPBindError as exception:
-            print(str(exception))
+            print('LDAPBindError: ' + str(exception))
 
             exit(2)
         except LDAPStartTLSError as exception:
-            print(str(exception))
+            print('LDAPStartTLSError: ' + str(exception))
+            print('TLS settings: ' + str(server.tls))
 
             exit(3)
 
