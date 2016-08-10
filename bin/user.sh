@@ -103,7 +103,6 @@ elif [ "${VERB}" = "set_password" ]; then
     echo "Enter new password:"
     read -r NEW_PASSWORD
     ENCRYPTED_PASSWORD=$(slappasswd -s "${NEW_PASSWORD}")
-    echo "Enter manager password:"
     echo "dn: ${USER_DN}
 replace: userPassword
 userPassword: ${ENCRYPTED_PASSWORD}" | ${MODIFY_MANAGER_PASSWORD}

@@ -16,7 +16,7 @@ function_exists()
 while true; do
     case ${1} in
         --help)
-            echo "Global usage: ${0} [--help][--config CONFIG][--debug]"
+            echo "Global usage: ${0} [--help][--config CONFIG]"
 
             if function_exists usage; then
                 usage
@@ -27,10 +27,6 @@ while true; do
         --config)
             CONFIG=${2-}
             shift 2
-            ;;
-        --debug)
-            set -x
-            shift
             ;;
         *)
             break
@@ -100,7 +96,7 @@ export CAT
 # -x - Use simple authentication.
 # -w - Pass password as argument when authenticating.
 
-HOST_NAME="ldap.shiin.org"
+HOST_NAME="ldap.greenshininglake.org"
 HOST_PARAMETER="ldap://${HOST_NAME}"
 
 # Basic reusable commands.
