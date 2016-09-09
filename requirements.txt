@@ -5,4 +5,6 @@ pytest-cov
 ldap3
 shyaml
 flask
-git+ssh://git@github.com/FunTimeCoding/python-utility.git#egg=python-utility
+
+# helper classes
+git+https://git@github.com/FunTimeCoding/python-utility.git#egg=python-utility
