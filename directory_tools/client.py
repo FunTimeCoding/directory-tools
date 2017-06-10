@@ -1,19 +1,19 @@
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
 from os import path
 
-from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, AUTH_SIMPLE
-from ldap3 import LDAPSSLConfigurationError
-from ldap3 import LDAPSocketOpenError, LDAPBindError, LDAPStartTLSError
+from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, SIMPLE
 from ldap3 import Server, Connection, Tls
+from ldap3.core.exceptions import LDAPSSLConfigurationError, LDAPStartTLSError
+from ldap3.core.exceptions import LDAPSocketOpenError, LDAPBindError
 
 
 class Client:
     def __init__(
-        self,
-        server_name: str,
-        manager_dn: str,
-        manager_password: str,
-        suffix: str,
+            self,
+            server_name: str,
+            manager_dn: str,
+            manager_password: str,
+            suffix: str,
     ):
         self._server_name = server_name
         self._manager_dn = manager_dn
@@ -59,7 +59,7 @@ class Client:
                 auto_bind=AUTO_BIND_TLS_BEFORE_BIND,
                 user=self._manager_dn,
                 password=self._manager_password,
-                authentication=AUTH_SIMPLE,
+                authentication=SIMPLE,
                 version=3
             )
         except LDAPSocketOpenError as exception:
