@@ -34,6 +34,8 @@ setup(
         'console_scripts': [
             'dt=directory_tools.directory_tools:'
             'DirectoryTools.main',
+            'dt-web-service=directory_tools.web_service:'
+            'WebService.main',
         ],
     },
 )

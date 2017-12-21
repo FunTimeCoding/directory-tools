@@ -1,4 +1,4 @@
-from python_utility.yaml_config import YamlConfig
+from directory_tools.yaml_config import YamlConfig
 from yaml import dump
 from sys import argv
 
@@ -6,84 +6,148 @@ from directory_tools.argument_parser import Parser
 from directory_tools.client import Client
 
 
+class Commands:
+    def __init__(
+            self,
+            domain: str,
+            top_level: str,
+            host: str,
+            manager_name: str,
+            manager_password: str
+    ):
+        self.suffix = 'dc=' + domain + ',dc=' + top_level
+        self.server_name = host + '.' + domain + '.' + top_level
+        self.manager = 'cn=' + manager_name + ',' + self.suffix
+        self.manager_password = manager_password
+        self.client = None
+
+    def lazy_get_client(self) -> Client:
+        if self.client is None:
+            self.client = Client(
+                server_name=self.server_name,
+                manager_distinguished_name=self.manager,
+                manager_password=self.manager_password,
+                suffix=self.suffix,
+            )
+
+        return self.client
+
+    def list_users(self) -> str:
+        return self.format_response(
+            self.lazy_get_client().search_user('ou=users,' + self.suffix)
+        )
+
+    def search(self, query: str) -> list:
+        return self.lazy_get_client().search_user(query)
+
+    def show_user(self, name: str):
+        return self.format_response(
+            self.search('(uid=' + name + ')')
+        )
+
+    def show_user_by_full_name(self, name: str):
+        return self.format_response(
+            self.search('(cn=' + name + ')')
+        )
+
+    def add_user(self, name: str) -> None:
+        pass
+
+    def remove_user(self, name: str) -> None:
+        pass
+
+    def list_groups(self) -> str:
+        pass
+
+    def show_group(self, name: str) -> str:
+        pass
+
+    def add_group(self, name: str) -> None:
+        pass
+
+    def remove_group(self, name: str) -> None:
+        pass
+
+    def status(self) -> str:
+        return self.format_response(
+            self.lazy_get_client().search(
+                '(cn=admin)',
+                ['cn', 'description'],
+            )
+        )
+
+    @staticmethod
+    def format_response(response: list) -> str:
+        result = ''
+
+        for element in response:
+            clean_attributes = {}
+
+            for key, value in element['attributes'].items():
+                clean_attributes[key] = ','.join(value)
+
+            result += dump(
+                clean_attributes,
+                default_flow_style=False
+            ).strip() + '\n'
+
+        return result
+
+
 class DirectoryTools:
     def __init__(self, arguments: list):
-        self._parser = Parser(arguments)
-        self._parsed_arguments = self._parser.parsed_arguments
-
+        self.parser = Parser(arguments)
+        self.parsed_arguments = self.parser.parsed_arguments
         config = YamlConfig('~/.directory-tools.yaml')
-        host = config.get('host')
-        domain = config.get('domain')
-        top_level = config.get('top_level')
-        manager_name = config.get('manager-name')
-
-        self._suffix = 'dc=' + domain + ',dc=' + top_level
-        self._server_name = host + '.' + domain + '.' + top_level
-        self._manager_dn = 'cn=' + manager_name + ',' + self._suffix
-        self._manager_password = config.get('manager-password')
-        self._client = None
+        self.host = config.get('host')
+        self.domain = config.get('domain')
+        self.top_level = config.get('top_level')
+        self.manager_name = config.get('manager-name')
+        self.manager_password = config.get('manager-password')
 
     @staticmethod
     def main() -> int:
         return DirectoryTools(argv[1:]).run()
 
-    def _lazy_get_client(self) -> Client:
-        if self._client is None:
-            self._client = Client(
-                server_name=self._server_name,
-                manager_dn=self._manager_dn,
-                manager_password=self._manager_password,
-                suffix=self._suffix
-            )
-
-        return self._client
-
-    @staticmethod
-    def print_response(response: list) -> None:
-        for element in response:
-            attributes = element['attributes']
-            clean_attributes = {}
-
-            for key, value in attributes.items():
-                clean_attributes[key] = ','.join(value)
-
-            markup_language = dump(clean_attributes, default_flow_style=False)
-            print(markup_language.strip())
-
     def run(self) -> int:
         exit_code = 0
-        arguments = self._parsed_arguments
-        parser = self._parser
+        commands = Commands(
+            domain=self.domain,
+            top_level=self.top_level,
+            host=self.host,
+            manager_name=self.manager_name,
+            manager_password=self.manager_password,
+        )
 
-        if 'user' in arguments:
-            if 'add' in arguments:
-                pass
-            elif 'delete' in arguments:
-                pass
-            elif 'search' in arguments:
-                client = self._lazy_get_client()
-
-                if arguments.user_name is not None:
-                    query = '(uid=' + arguments.user_name + ')'
-                else:
-                    query = '(cn=' + arguments.full_name + ')'
-
-                response = client.search_user(query)
-                self.print_response(response)
-            elif 'list' in arguments:
-                client = self._lazy_get_client()
-                response = client.search_user('ou=users,dc=shiin,dc=org')
-                self.print_response(response)
+        if 'user' in self.parsed_arguments:
+            if 'add' in self.parsed_arguments:
+                commands.add_user(
+                    name=self.parsed_arguments.name,
+                )
+            elif 'remove' in self.parsed_arguments:
+                commands.remove_user(self.parsed_arguments.name)
+            elif 'show' in self.parsed_arguments:
+                print(commands.show_user(self.parsed_arguments.name))
+            elif 'list' in self.parsed_arguments:
+                print(commands.list_users())
             else:
-                parser.print_help()
-        elif 'status' in arguments:
-            client = self._lazy_get_client()
-            response = client.search(
-                '(cn=admin)',
-                ['cn', 'description']
-            )
-            self.print_response(response)
+                self.parser.print_help()
+        elif 'group' in self.parsed_arguments:
+            if 'add' in self.parsed_arguments:
+                commands.add_group(
+                    name=self.parsed_arguments.name,
+                )
+            elif 'remove' in self.parsed_arguments:
+                commands.remove_group(self.parsed_arguments.name)
+            elif 'show' in self.parsed_arguments:
+                print(commands.show_group(self.parsed_arguments.name))
+            elif 'list' in self.parsed_arguments:
+                print(commands.list_groups())
+            else:
+                self.parser.print_help()
+        elif 'status' in self.parsed_arguments:
+            commands.status()
         else:
-            parser.print_help()
+            self.parser.print_help()
 
         return exit_code

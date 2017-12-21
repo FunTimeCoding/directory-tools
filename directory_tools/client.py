@@ -1,5 +1,5 @@
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
-from os import path
+from os.path import dirname, realpath, join
 
 from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, SIMPLE
 from ldap3 import Server, Connection, Tls
@@ -11,54 +11,56 @@ class Client:
     def __init__(
             self,
             server_name: str,
-            manager_dn: str,
+            manager_distinguished_name: str,
             manager_password: str,
             suffix: str,
     ):
-        self._server_name = server_name
-        self._manager_dn = manager_dn
-        self._manager_password = manager_password
-        self._suffix = suffix
-        self._connection = None
+        self.server_name = server_name
+        self.manager_distinguished_name = manager_distinguished_name
+        self.manager_password = manager_password
+        self.suffix = suffix
+        self.connection = None
 
-    def _create_server(self) -> Server:
-        base_path = path.dirname(path.realpath(__file__))
-        ca_certificates_file = path.join(base_path, 'ca_certs.pem')
+    def create_server(self) -> Server:
+        certificate_chain_file = join(
+            dirname(realpath(__file__)),
+            'ca_certs.pem',
+        )
         tls = None
 
         try:
             # TODO: Why is PROTOCOL_SSLv23 possible?
             tls = Tls(
                 validate=CERT_REQUIRED,
-                ca_certs_file=ca_certificates_file,
-                version=PROTOCOL_TLSv1_2
+                ca_certs_file=certificate_chain_file,
+                version=PROTOCOL_TLSv1_2,
             )
         except LDAPSSLConfigurationError as exception:
             print('LDAPSSLConfigurationError: ' + str(exception))
-            print('ca_certificates_file: ' + ca_certificates_file)
-            print('server_name: ' + self._server_name)
+            print('certificate_chain_file: ' + certificate_chain_file)
+            print('server_name: ' + self.server_name)
 
             exit(4)
 
         return Server(
-            host=self._server_name,
+            host=self.server_name,
             port=389,
             get_info=False,
-            tls=tls
+            tls=tls,
         )
 
-    def _create_connection(self) -> Connection:
-        server = self._create_server()
+    def create_connection(self) -> Connection:
+        server = self.create_server()
 
-        # PyCharm wants this to not complain on return.
+        # PyCharm wants this to not complain about the return statement.
         connection = None
 
         try:
             connection = Connection(
                 server,
                 auto_bind=AUTO_BIND_TLS_BEFORE_BIND,
-                user=self._manager_dn,
-                password=self._manager_password,
+                user=self.manager_distinguished_name,
+                password=self.manager_password,
                 authentication=SIMPLE,
                 version=3
             )
@@ -78,19 +80,18 @@ class Client:
 
         return connection
 
-    def _lazy_get_connection(self) -> Connection:
-        if self._connection is None:
-            self._connection = self._create_connection()
+    def lazy_get_connection(self) -> Connection:
+        if self.connection is None:
+            self.connection = self.create_connection()
 
-        return self._connection
+        return self.connection
 
     def search(self, query: str, attributes: list) -> any:
-        connection = self._lazy_get_connection()
-        suffix = self._suffix
+        connection = self.lazy_get_connection()
         result = connection.search(
-            search_base=suffix,
+            search_base=self.suffix,
             search_filter=query,
-            attributes=attributes
+            attributes=attributes,
         )
 
         if isinstance(result, bool):
@@ -106,19 +107,20 @@ class Client:
         return response
 
     def response_to_json(self, response) -> str:
-        return self._connection.response_to_json(response)
+        return self.connection.response_to_json(response)
 
     def search_user(self, query: str) -> any:
-        attributes = [
-            'cn',
-            'uid',
-            'displayName',
-            'uidNumber',
-            'gidNumber'
-            'homeDirectory',
-            'loginShell',
-            'gecos',
-            'mail'
-        ]
-
-        return self.search(query=query, attributes=attributes)
+        return self.search(
+            query=query,
+            attributes=[
+                'cn',
+                'uid',
+                'displayName',
+                'uidNumber',
+                'gidNumber'
+                'homeDirectory',
+                'loginShell',
+                'gecos',
+                'mail',
+            ]
+        )
