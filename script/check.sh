@@ -1,11 +1,5 @@
 #!/bin/sh -e
 
-if [ "$(command -v shellcheck || true)" = "" ]; then
-    echo "Command not found: shellcheck"
-
-    exit 1
-fi
-
 if [ "${1}" = --help ]; then
     echo "Usage: ${0} [--ci-mode]"
 
@@ -21,6 +15,68 @@ if [ "${1}" = --ci-mode ]; then
     CONTINUOUS_INTEGRATION_MODE=true
 fi
 
+MARKDOWN_FILES=$(find . -name '*.md')
+BLACKLIST=""
+DICTIONARY=en_US
+
+for FILE in ${MARKDOWN_FILES}; do
+    WORDS=$(hunspell -d "${DICTIONARY}" -p documentation/dictionary/directory-tools.dic -l "${FILE}" | sort | uniq)
+
+    if [ ! "${WORDS}" = "" ]; then
+        echo "${FILE}"
+
+        for WORD in ${WORDS}; do
+            BLACKLISTED=$(echo "${BLACKLIST}" | grep "${WORD}") || BLACKLISTED=false
+
+            if [ "${BLACKLISTED}" = false ]; then
+                if [ "${CONTINUOUS_INTEGRATION_MODE}" = true ]; then
+                    grep --line-number "${WORD}" "${FILE}"
+                else
+                    # The equals character is required.
+                    grep --line-number --color=always "${WORD}" "${FILE}"
+                fi
+            else
+                echo "Blacklisted word: ${WORD}"
+            fi
+        done
+
+        echo
+    fi
+done
+
+TEX_FILES=$(find . -name '*.tex')
+
+for FILE in ${TEX_FILES}; do
+    WORDS=$(hunspell -d "${DICTIONARY}" -p documentation/dictionary/directory-tools.dic -l -t "${FILE}")
+
+    if [ ! "${WORDS}" = "" ]; then
+        echo "${FILE}"
+
+        for WORD in ${WORDS}; do
+            STARTS_WITH_DASH=$(echo "${WORD}" | grep -q '^-') || STARTS_WITH_DASH=false
+
+            if [ "${STARTS_WITH_DASH}" = false ]; then
+                BLACKLISTED=$(echo "${BLACKLIST}" | grep "${WORD}") || BLACKLISTED=false
+
+                if [ "${BLACKLISTED}" = false ]; then
+                    if [ "${CONTINUOUS_INTEGRATION_MODE}" = true ]; then
+                        grep --line-number "${WORD}" "${FILE}"
+                    else
+                        # The equals character is required.
+                        grep --line-number --color=always "${WORD}" "${FILE}"
+                    fi
+                else
+                    echo "Skip blacklisted: ${WORD}"
+                fi
+            else
+                echo "Skip invalid: ${WORD}"
+            fi
+        done
+
+        echo
+    fi
+done
+
 SYSTEM=$(uname)
 
 if [ "${SYSTEM}" = Darwin ]; then
@@ -29,7 +85,7 @@ else
     FIND=find
 fi
 
-INCLUDE_FILTER="^.*(\/bin\/.*|\.py)$"
+INCLUDE_FILTER="^.*(\/bin\/[a-z]*|\.py)$"
 EXCLUDE_FILTER="^.*\/(build|tmp|\.git|\.vagrant|\.idea|\.venv|\.tox)\/.*$"
 
 if [ "${CONTINUOUS_INTEGRATION_MODE}" = true ]; then
@@ -95,17 +151,17 @@ if [ ! "${SHELLCHECK_IGNORES}" = "" ]; then
     fi
 fi
 
-PEP8_CONCERNS=$(pep8 --exclude=.git,.tox,.venv,__pycache__ --statistics .) || RETURN_CODE=$?
+PYCODESTYLE_CONCERNS=$(pycodestyle --exclude=.git,.tox,.venv,__pycache__ --statistics .) || RETURN_CODE=$?
 
 if [ "${CONTINUOUS_INTEGRATION_MODE}" = true ]; then
-    echo "${PEP8_CONCERNS}" > build/log/pep8.txt
+    echo "${PYCODESTYLE_CONCERNS}" > build/log/pycodestyle.txt
 else
-    if [ ! "${PEP8_CONCERNS}" = "" ]; then
+    if [ ! "${PYCODESTYLE_CONCERNS}" = "" ]; then
         CONCERN_FOUND=true
         echo
         echo "(WARNING) PEP8 concerns:"
         echo
-        echo "${PEP8_CONCERNS}"
+        echo "${PYCODESTYLE_CONCERNS}"
     fi
 fi
 
@@ -113,11 +169,18 @@ PYTHON_FILES=$(${FIND} . -type f -regextype posix-extended -regex "${INCLUDE_FIL
 RETURN_CODE=0
 # shellcheck disable=SC2086
 PYLINT_OUTPUT=$(pylint ${PYTHON_FILES}) || RETURN_CODE=$?
+SYSTEM=$(uname)
+
+if [ "${SYSTEM}" = Darwin ]; then
+    TEE=gtee
+else
+    TEE=tee
+fi
 
 if [ "${CONTINUOUS_INTEGRATION_MODE}" = true ]; then
-    echo  | tee build/log/pylint.txt
-    echo "(NOTICE) Pylint" | tee --append build/log/pylint.txt
-    echo "${PYLINT_OUTPUT}" | tee --append build/log/pylint.txt
+    echo | "${TEE}" build/log/pylint.txt
+    echo "(NOTICE) Pylint" | "${TEE}" --append build/log/pylint.txt
+    echo "${PYLINT_OUTPUT}" | "${TEE}" --append build/log/pylint.txt
 else
     echo
     echo "(NOTICE) Pylint"

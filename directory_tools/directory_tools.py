@@ -1,5 +1,6 @@
 from python_utility.yaml_config import YamlConfig
 from yaml import dump
+from sys import argv
 
 from directory_tools.argument_parser import Parser
 from directory_tools.client import Client
@@ -21,6 +22,10 @@ class DirectoryTools:
         self._manager_dn = 'cn=' + manager_name + ',' + self._suffix
         self._manager_password = config.get('manager-password')
         self._client = None
+
+    @staticmethod
+    def main() -> int:
+        return DirectoryTools(argv[1:]).run()
 
     def _lazy_get_client(self) -> Client:
         if self._client is None:

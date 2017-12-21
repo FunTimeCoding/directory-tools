@@ -1,0 +1,16 @@
+Source: directory-tools
+Priority: optional
+Maintainer: Alexander Reitzel <funtimecoding@gmail.com>
+Build-Depends: debhelper (>= 9), dh-python, python3-all, python3-setuptools
+Standards-Version: 3.9.8
+Homepage: https://github.com/FunTimeCoding/directory-tools
+X-Python3-Version: >= 3.2
+Vcs-Browser: https://github.com/FunTimeCoding/directory-tools
+Vcs-Git: https://github.com/FunTimeCoding/directory-tools.git
+
+Package: python3-directory-tools
+Section: python
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}
+Description: stub short description
+ Stub long description.
