@@ -11,7 +11,7 @@ class DirectoryTools:
         self._parser = Parser(arguments)
         self._parsed_arguments = self._parser.parsed_arguments
 
-        config = YamlConfig('~/.directory-tools.yml')
+        config = YamlConfig('~/.directory-tools.yaml')
         host = config.get('host')
         domain = config.get('domain')
         top_level = config.get('top_level')
