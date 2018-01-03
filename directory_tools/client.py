@@ -14,7 +14,7 @@ class Client:
             manager_distinguished_name: str,
             manager_password: str,
             suffix: str,
-    ):
+    ) -> None:
         self.server_name = server_name
         self.manager_distinguished_name = manager_distinguished_name
         self.manager_password = manager_password

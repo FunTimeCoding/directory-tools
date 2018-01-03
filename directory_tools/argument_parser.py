@@ -4,7 +4,7 @@ from python_utility.custom_argument_parser import CustomArgumentParser
 
 
 class Parser:
-    def __init__(self, arguments: list):
+    def __init__(self, arguments: list) -> None:
         self.parser = CustomArgumentParser(
             description='directory administration tool',
             formatter_class=ArgumentDefaultsHelpFormatter
@@ -15,7 +15,7 @@ class Parser:
         self.add_status_child_parser(subparsers)
         self.parsed_arguments = self.parser.parse_args(arguments)
 
-    def print_help(self):
+    def print_help(self) -> None:
         self.parser.print_help()
 
     @staticmethod
@@ -34,11 +34,7 @@ class Parser:
         add_parent.add_argument('--full-name', required=True)
         add_parent.add_argument('--password', required=True)
         add_parent.add_argument('--email', required=True)
-        add_parent.add_argument(
-            '--groups',
-            nargs='+',
-            metavar='GROUP',
-        )
+        add_parent.add_argument('--group', required=True)
         add_parser = user_subparsers.add_parser(
             'add',
             parents=[add_parent],
@@ -56,8 +52,7 @@ class Parser:
         remove_parser.add_argument('remove', action='store_true')
 
         show_parent = CustomArgumentParser(add_help=False)
-        show_group = show_parent.add_mutually_exclusive_group(required=True)
-        show_group.add_argument('--name', required=True)
+        show_parent.add_argument('--name', required=True)
         show_parser = user_subparsers.add_parser(
             'show',
             parents=[show_parent],
@@ -98,8 +93,7 @@ class Parser:
         remove_parser.add_argument('remove', action='store_true')
 
         show_parent = CustomArgumentParser(add_help=False)
-        show_group = show_parent.add_mutually_exclusive_group(required=True)
-        show_group.add_argument('--name', required=True)
+        show_parent.add_argument('--name', required=True)
         show_parser = group_subparsers.add_parser(
             'show',
             parents=[show_parent],
@@ -107,8 +101,10 @@ class Parser:
         )
         show_parser.add_argument('show', action='store_true')
 
-        list_parser = group_subparsers.add_parser('list',
-                                                  help='list all groups')
+        list_parser = group_subparsers.add_parser(
+            'list',
+            help='list all groups'
+        )
         list_parser.add_argument('list', action='store_true')
 
     @staticmethod

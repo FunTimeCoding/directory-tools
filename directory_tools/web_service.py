@@ -16,7 +16,7 @@ class WebService:
     manager_name = ''
     manager_password = ''
 
-    def __init__(self, arguments: list):
+    def __init__(self, arguments: list) -> None:
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'

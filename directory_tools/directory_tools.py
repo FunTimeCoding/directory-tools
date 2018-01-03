@@ -14,7 +14,7 @@ class Commands:
             host: str,
             manager_name: str,
             manager_password: str
-    ):
+    ) -> None:
         self.suffix = 'dc=' + domain + ',dc=' + top_level
         self.server_name = host + '.' + domain + '.' + top_level
         self.manager = 'cn=' + manager_name + ',' + self.suffix
@@ -50,7 +50,14 @@ class Commands:
             self.search('(cn=' + name + ')')
         )
 
-    def add_user(self, name: str) -> None:
+    def add_user(
+            self,
+            name: str,
+            full_name: str,
+            password: str,
+            email: str,
+            group: str
+    ) -> None:
         pass
 
     def remove_user(self, name: str) -> None:
@@ -110,7 +117,6 @@ class DirectoryTools:
         return DirectoryTools(argv[1:]).run()
 
     def run(self) -> int:
-        exit_code = 0
         commands = Commands(
             domain=self.domain,
             top_level=self.top_level,
@@ -123,24 +129,26 @@ class DirectoryTools:
             if 'add' in self.parsed_arguments:
                 commands.add_user(
                     name=self.parsed_arguments.name,
+                    full_name=self.parsed_arguments.full_name,
+                    password=self.parsed_arguments.password,
+                    email=self.parsed_arguments.email,
+                    group=self.parsed_arguments.group,
                 )
             elif 'remove' in self.parsed_arguments:
-                commands.remove_user(self.parsed_arguments.name)
+                commands.remove_user(name=self.parsed_arguments.name)
             elif 'show' in self.parsed_arguments:
-                print(commands.show_user(self.parsed_arguments.name))
+                print(commands.show_user(name=self.parsed_arguments.name))
             elif 'list' in self.parsed_arguments:
                 print(commands.list_users())
             else:
                 self.parser.print_help()
         elif 'group' in self.parsed_arguments:
             if 'add' in self.parsed_arguments:
-                commands.add_group(
-                    name=self.parsed_arguments.name,
-                )
+                commands.add_group(name=self.parsed_arguments.name)
             elif 'remove' in self.parsed_arguments:
-                commands.remove_group(self.parsed_arguments.name)
+                commands.remove_group(name=self.parsed_arguments.name)
             elif 'show' in self.parsed_arguments:
-                print(commands.show_group(self.parsed_arguments.name))
+                print(commands.show_group(name=self.parsed_arguments.name))
             elif 'list' in self.parsed_arguments:
                 print(commands.list_groups())
             else:
@@ -150,4 +158,4 @@ class DirectoryTools:
         else:
             self.parser.print_help()
 
-        return exit_code
+        return 0
