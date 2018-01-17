@@ -5,6 +5,7 @@ from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, SIMPLE, AUTO_BIND_NONE
 from ldap3 import Server, Connection, Tls
 from ldap3.core.exceptions import LDAPSSLConfigurationError, LDAPStartTLSError
 from ldap3.core.exceptions import LDAPSocketOpenError, LDAPBindError
+from ldap3.core.exceptions import LDAPInvalidFilterError
 
 
 class Client:
@@ -60,10 +61,11 @@ class Client:
         connection = None
 
         try:
+            # TODO: auto_bind is somehow important. Document why.
             if self.secure:
                 auto_bind = AUTO_BIND_TLS_BEFORE_BIND
             else:
-                auto_bind = AUTO_BIND_NONE
+                auto_bind = True
 
             connection = Connection(
                 server,
@@ -95,13 +97,19 @@ class Client:
 
         return self.connection
 
-    def search(self, query: str, attributes: list) -> any:
+    def search(self, query: str, attributes: list = []) -> any:
         connection = self.lazy_get_connection()
-        result = connection.search(
-            search_base=self.suffix,
-            search_filter=query,
-            attributes=attributes,
-        )
+
+        try:
+            result = connection.search(
+                search_base=self.suffix,
+                search_filter=query,
+                attributes=attributes,
+            )
+        except LDAPInvalidFilterError as exception:
+            print('LDAPInvalidFilterError: ' + str(exception) +  ': ' + query)
+
+            exit(5)
 
         if isinstance(result, bool):
             response = connection.response
