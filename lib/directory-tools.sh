@@ -1,24 +1,11 @@
 #!/bin/sh -e
 
-if [ "$(command -v shyaml || true)" = "" ]; then
-    echo "Command not found: shyaml"
-
-    exit 1
-fi
-
-function_exists()
-{
-    declare -f -F "${1}" > /dev/null
-
-    return $?
-}
-
 while true; do
     case ${1} in
         --help)
             echo "Global usage: ${0} [--help][--config CONFIG]"
 
-            if function_exists usage; then
+            if command -v usage > /dev/null; then
                 usage
             fi
 
@@ -40,20 +27,7 @@ if [ "${CONFIG}" = "" ]; then
     CONFIG="${HOME}/.directory-tools.yml"
 fi
 
-if [ "$(command -v realpath || true)" = "" ]; then
-    if [ "$(command -v grealpath || true)" = "" ]; then
-        echo "Command not found: realpath"
-
-        exit 1
-    else
-        REALPATH="grealpath"
-    fi
-else
-    REALPATH="realpath"
-fi
-
 if [ -f "${CONFIG}" ]; then
-    CONFIG=$(${REALPATH} "${CONFIG}")
     DOMAIN=$(shyaml get-value "domain" < "${CONFIG}" 2>/dev/null || true)
     export DOMAIN
     TOP_LEVEL=$(shyaml get-value "top_level" < "${CONFIG}" 2>/dev/null || true)
