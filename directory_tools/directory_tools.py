@@ -13,12 +13,14 @@ class Commands:
             top_level: str,
             host: str,
             manager_name: str,
-            manager_password: str
+            manager_password: str,
+            secure: bool = False
     ) -> None:
         self.suffix = 'dc=' + domain + ',dc=' + top_level
         self.server_name = host + '.' + domain + '.' + top_level
         self.manager = 'cn=' + manager_name + ',' + self.suffix
         self.manager_password = manager_password
+        self.secure = secure
         self.client = None
 
     def lazy_get_client(self) -> Client:
@@ -28,6 +30,7 @@ class Commands:
                 manager_distinguished_name=self.manager,
                 manager_password=self.manager_password,
                 suffix=self.suffix,
+                secure=self.secure,
             )
 
         return self.client
@@ -111,6 +114,7 @@ class DirectoryTools:
         self.top_level = config.get('top_level')
         self.manager_name = config.get('manager-name')
         self.manager_password = config.get('manager-password')
+        self.secure = config.get('secure')
 
     @staticmethod
     def main() -> int:
@@ -123,6 +127,7 @@ class DirectoryTools:
             host=self.host,
             manager_name=self.manager_name,
             manager_password=self.manager_password,
+            secure=self.secure,
         )
 
         if 'user' in self.parsed_arguments:

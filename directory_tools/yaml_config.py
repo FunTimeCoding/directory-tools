@@ -34,7 +34,7 @@ class YamlConfig:
 
         return result
 
-    def get(self, key: str) -> str:
+    def get(self, key: str) -> any:
         return self.settings.get(key, '')
 
     def set(self, key: str, value: str):
