@@ -1,7 +1,7 @@
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
 from os.path import dirname, realpath, join
 
-from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, SIMPLE, AUTO_BIND_NONE
+from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, SIMPLE
 from ldap3 import Server, Connection, Tls
 from ldap3.core.exceptions import LDAPSSLConfigurationError, LDAPStartTLSError
 from ldap3.core.exceptions import LDAPSocketOpenError, LDAPBindError
@@ -97,8 +97,14 @@ class Client:
 
         return self.connection
 
-    def search(self, query: str, attributes: list = []) -> any:
+    def search(self, query: str, attributes=None) -> any:
+
+        if attributes is None:
+            attributes = []
+
         connection = self.lazy_get_connection()
+        # Need to assign this to make the static analysis happy.
+        result = None
 
         try:
             result = connection.search(
