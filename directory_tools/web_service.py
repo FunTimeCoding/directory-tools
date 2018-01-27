@@ -22,10 +22,10 @@ class WebService:
     manager_password = ''
 
     def __init__(self) -> None:
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
+        # logging.basicConfig(
+        #     level=logging.DEBUG,
+        #     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        # )
         config = YamlConfig('~/.directory-tools.yaml')
         WebService.host = config.get('host')
         WebService.domain = config.get('domain')

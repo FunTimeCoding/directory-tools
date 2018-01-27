@@ -142,10 +142,10 @@ class Commands:
 
 class DirectoryTools:
     def __init__(self, arguments: list):
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
+        # logging.basicConfig(
+        #     level=logging.DEBUG,
+        #     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        # )
         self.parser = Parser(arguments)
         self.parsed_arguments = self.parser.parsed_arguments
         config = YamlConfig('~/.directory-tools.yaml')

@@ -7,6 +7,7 @@ from ldap3 import Server, Connection, Tls
 from ldap3.core.exceptions import LDAPSSLConfigurationError, LDAPStartTLSError
 from ldap3.core.exceptions import LDAPSocketOpenError, LDAPBindError
 from ldap3.core.exceptions import LDAPInvalidFilterError
+from ldap3.utils.log import set_library_log_activation_level
 
 
 class Client:
@@ -18,10 +19,11 @@ class Client:
             suffix: str,
             secure: bool = False,
     ) -> None:
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
+        # logging.basicConfig(
+        #     level=logging.DEBUG,
+        #     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        # )
+        set_library_log_activation_level(logging.DEBUG)
         self.server_name = server_name
         self.manager_distinguished_name = manager_distinguished_name
         self.manager_password = manager_password
