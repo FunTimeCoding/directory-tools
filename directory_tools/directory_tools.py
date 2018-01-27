@@ -8,6 +8,20 @@ from directory_tools.client import Client
 
 
 class Commands:
+    posix_account = {
+        'full_name': 'cn',  # must
+        'username': 'uid',  # must
+        'user_number': 'uidNumber',  # must
+        'group_number': 'gidNumber',  # must
+        'home': 'homeDirectory',  # must
+        'password': 'userPassword',  # may
+    }
+    internet_organization_person = {
+        'first_name': 'givenName',  # may
+        'last_name': 'sn',  # may
+        'email': 'mail',  # may
+    }
+
     def __init__(
             self,
             domain: str,
@@ -51,19 +65,6 @@ class Commands:
             email: str,
             group: str
     ) -> None:
-        posix_account = {
-            'full_name': 'cn',  # must
-            'username': 'uid',  # must
-            'user_number': 'uidNumber',  # must
-            'group_number': 'gidNumber',  # must
-            'home': 'homeDirectory',  # must
-            'password': 'userPassword',  # may
-        }
-        internet_organization_person = {
-            'first_name': 'givenName',  # may
-            'last_name': 'sn',  # may
-            'email': 'mail',  # may
-        }
         connection = self.lazy_get_client().lazy_get_connection()
 
         if not connection.add(
@@ -78,15 +79,19 @@ class Commands:
                 # TODO: get uid increment
                 # TODO: get gid
                 attributes={
-                    posix_account['full_name']: first_name + ' ' + last_name,
-                    posix_account['username']: username,
-                    posix_account['user_number']: 2000,
-                    posix_account['group_number']: 2000,
-                    posix_account['home']: '/home/' + username,
-                    posix_account['password']: self.encrypt_password(password),
-                    internet_organization_person['first_name']: first_name,
-                    internet_organization_person['last_name']: last_name,
-                    internet_organization_person['email']: email,
+                    self.posix_account[
+                        'full_name'
+                    ]: first_name + ' ' + last_name,
+                    self.posix_account['username']: username,
+                    self.posix_account['user_number']: 2000,
+                    self.posix_account['group_number']: 2000,
+                    self.posix_account['home']: '/home/' + username,
+                    self.posix_account[
+                        'password'
+                    ]: self.encrypt_password(password),
+                    self.internet_organization_person['first_name']: first_name,
+                    self.internet_organization_person['last_name']: last_name,
+                    self.internet_organization_person['email']: email,
                 },
         ):
             raise RuntimeError(connection.result['description'])
@@ -103,13 +108,23 @@ class Commands:
         if not connection.search(
                 search_base='ou=users,' + self.suffix,
                 search_filter='(uid=' + name + ')',
+                attributes=[
+                    self.posix_account['username'],
+                    self.internet_organization_person['first_name'],
+                    self.internet_organization_person['last_name'],
+                    self.internet_organization_person['email'],
+                    self.posix_account['full_name'],
+                    self.posix_account['user_number'],
+                    self.posix_account['group_number'],
+                    self.posix_account['home'],
+                ],
         ):
             if connection.result['description'] == 'success':
                 return ''
             else:
                 raise RuntimeError(connection.result['description'])
 
-        return str(connection.response)
+        return str(connection.response[0])
 
     def list_users(self) -> list:
         connection = self.lazy_get_client().lazy_get_connection()
