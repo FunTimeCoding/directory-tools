@@ -160,8 +160,8 @@ class Commands:
             attributes = entry['attributes']
             users[attributes[self.posix_account['username']]] = {
                 self.posix_account['full_name']: attributes[
-                    self.posix_account['full_name'][0]
-                ],
+                    self.posix_account['full_name']
+                ][0],
                 self.posix_account['user_number']: attributes[
                     self.posix_account['user_number']
                 ],
@@ -172,14 +172,14 @@ class Commands:
                     self.posix_account['home']
                 ],
                 self.internet_organization_person['first_name']: attributes[
-                    self.internet_organization_person['first_name'][0]
-                ],
+                    self.internet_organization_person['first_name']
+                ][0],
                 self.internet_organization_person['last_name']: attributes[
-                    self.internet_organization_person['last_name'][0]
-                ],
+                    self.internet_organization_person['last_name']
+                ][0],
                 self.internet_organization_person['email']: attributes[
-                    self.internet_organization_person['email'][0]
-                ],
+                    self.internet_organization_person['email']
+                ][0],
             }
 
         return users
