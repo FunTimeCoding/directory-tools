@@ -71,25 +71,27 @@ class WebService:
         form = RegisterForm(request.form)
 
         if request.method == 'POST' and form.validate():
-            WebService.create_commands().add_user(
-                username=form.username.data,
-                first_name=form.first_name.data,
-                last_name=form.last_name.data,
-                password=form.password.data,
-                email=form.email.data,
-                group='',
-            )
-            # user = User(form.username.data, form.email.data,
-            #             form.password.data)
-            # db_session.add(user)
-            flash(
-                'Registration complete: ' + form.username.data + ' '
-                + form.email.data + ' ' + form.first_name.data + ' '
-                + form.last_name.data + ' ' + form.password.data + ' '
-                + form.confirm.data + ' ' + str(form.accept_tos.data)
-            )
+            try:
+                WebService.create_commands().add_user(
+                    username=form.username.data,
+                    first_name=form.first_name.data,
+                    last_name=form.last_name.data,
+                    password=form.password.data,
+                    email=form.email.data,
+                    group='',
+                )
+                flash('Registration complete.')
 
-            return redirect(url_for('login'))
+                return redirect(url_for('login'))
+            except BaseException as exception:
+                message = str(exception)
+
+                if message == 'entryAlreadyExists':
+                    flash('User already exists.')
+                else:
+                    flash('Unexpected error: ' + message)
+
+                return redirect(url_for('register'))
 
         return render_template('register.html', form=form)
 

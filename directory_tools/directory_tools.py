@@ -62,15 +62,13 @@ class Commands:
 
     def add_unit(self, name: str):
         connection = self.lazy_get_client().lazy_get_connection()
-        result = connection.add(
-            dn='ou=' + name + ',' + self.suffix,
-            object_class=['organizationalUnit'],
-            attributes={'ou': name}
-        )
 
-        if not result:
-            # TODO: Handle errors.
-            pass
+        if not connection.add(
+                dn='ou=' + name + ',' + self.suffix,
+                object_class=['organizationalUnit'],
+                attributes={'ou': name}
+        ):
+            raise RuntimeError(connection.result['description'])
 
     def remove_unit(self, name: str):
         pass
@@ -90,7 +88,6 @@ class Commands:
             email: str,
             group: str
     ) -> None:
-        full_name = first_name + ' ' + last_name
         connection = self.lazy_get_client().lazy_get_connection()
         posix_account = {
             'full_name': 'cn',  # must
@@ -105,33 +102,31 @@ class Commands:
             'last_name': 'sn',  # may
             'email': 'mail',  # may
         }
-        result = connection.add(
-            dn='uid=' + username + ',ou=users,' + self.suffix,
-            object_class=[
-                'top',
-                'posixAccount',  # super: top
-                'person',  # super: top
-                'organizationalPerson',  # super: person
-                'inetOrgPerson',  # super: organizationalPerson
-            ],
-            # TODO: get uid increment
-            # TODO: get gid
-            attributes={
-                posix_account['full_name']: full_name,
-                posix_account['username']: username,
-                posix_account['user_number']: 2000,
-                posix_account['group_number']: 2000,
-                posix_account['home']: '/home/' + username,
-                posix_account['password']: self.encrypt_password(password),
-                internet_organization_person['first_name']: first_name,
-                internet_organization_person['last_name']: last_name,
-                internet_organization_person['email']: email,
-            },
-        )
 
-        if not result:
-            # TODO: Handle errors.
-            pass
+        if not connection.add(
+                dn='uid=' + username + ',ou=users,' + self.suffix,
+                object_class=[
+                    'top',
+                    'posixAccount',  # super: top
+                    'person',  # super: top
+                    'organizationalPerson',  # super: person
+                    'inetOrgPerson',  # super: organizationalPerson
+                ],
+                # TODO: get uid increment
+                # TODO: get gid
+                attributes={
+                    posix_account['full_name']: first_name + ' ' + last_name,
+                    posix_account['username']: username,
+                    posix_account['user_number']: 2000,
+                    posix_account['group_number']: 2000,
+                    posix_account['home']: '/home/' + username,
+                    posix_account['password']: self.encrypt_password(password),
+                    internet_organization_person['first_name']: first_name,
+                    internet_organization_person['last_name']: last_name,
+                    internet_organization_person['email']: email,
+                },
+        ):
+            raise RuntimeError(connection.result['description'])
 
     def remove_user(self, name: str) -> None:
         pass

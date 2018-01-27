@@ -2,7 +2,7 @@ from subprocess import Popen, PIPE
 from os import name as os_name, environ
 
 
-class CommandFailed(BaseException):
+class CommandFailed(RuntimeError):
     def __init__(
             self,
             command: list,
