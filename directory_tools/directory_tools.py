@@ -92,41 +92,42 @@ class Commands:
     ) -> None:
         full_name = first_name + ' ' + last_name
         connection = self.lazy_get_client().lazy_get_connection()
+        posix_account = {
+            'full_name': 'cn',  # must
+            'username': 'uid',  # must
+            'user_number': 'uidNumber',  # must
+            'group_number': 'gidNumber',  # must
+            'home': 'homeDirectory',  # must
+            'password': 'userPassword',  # may
+        }
+        internet_organization_person = {
+            'first_name': 'givenName',  # may
+            'last_name': 'sn',  # may
+            'email': 'mail',  # may
+        }
         result = connection.add(
-            dn='cn=' + username + ',ou=users,' + self.suffix,
-            object_class=['posixAccount'],
+            dn='uid=' + username + ',ou=users,' + self.suffix,
+            object_class=[
+                'top',
+                'posixAccount',  # super: top
+                'person',  # super: top
+                'organizationalPerson',  # super: person
+                'inetOrgPerson',  # super: organizationalPerson
+            ],
+            # TODO: get uid increment
+            # TODO: get gid
             attributes={
-                'cn': full_name,
-                'uid': username,
-                'uidNumber': 1000,
-                'gidNumber': 1000,
-                'homeDirectory': '/home/' + username,
-            }
+                posix_account['full_name']: full_name,
+                posix_account['username']: username,
+                posix_account['user_number']: 2000,
+                posix_account['group_number']: 2000,
+                posix_account['home']: '/home/' + username,
+                posix_account['password']: self.encrypt_password(password),
+                internet_organization_person['given_name']: first_name,
+                internet_organization_person['surname']: last_name,
+                internet_organization_person['email']: email,
+            },
         )
-
-        # result = connection.add(
-        #     dn='uid=' + username + ',ou=users,' + self.suffix,
-        #     object_class=['inetOrgPerson', 'posixAccount', 'shadowAccount'],
-        #     # TODO: get uid increment
-        #     # TODO: get gid
-        #     # TODO: create ou if not exists?
-        #     attributes={
-        #         'cn': full_name,
-        #         'sn': last_name,
-        #         'uid': username,
-        #         'uidNumber': 2000,
-        #         'gidNumber': 2000,
-        #         'homeDirectory': '',
-        #         'loginShell': '/bin/bash',
-        #         'gecos': full_name,
-        #         'userPassword': self.encrypt_password(password),
-        #         'displayName': username,
-        #         'mail': email,
-        #         'shadowLastChange': 0,
-        #         'shadowMax': 0,
-        #         'shadowWarning': 0,
-        #     },
-        # )
 
         if not result:
             # TODO: Handle errors.
