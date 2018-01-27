@@ -158,28 +158,29 @@ class Commands:
 
         for entry in connection.response:
             attributes = entry['attributes']
-            users[attributes[self.posix_account['username']][0]] = attributes
-            # users[entry[self.posix_account['username']]] = {
-            #     self.posix_account['full_name']: entry[
-            #         self.posix_account['full_name']
-            #     ],
-            #     self.posix_account['user_number']: entry[
-            #         self.posix_account['user_number']
-            #     ],
-            #     self.posix_account['group_number']: entry[
-            #         self.posix_account['group_number']
-            #     ],
-            #     self.posix_account['home']: entry[self.posix_account['home']],
-            #     self.internet_organization_person['first_name']: entry[
-            #         self.internet_organization_person['first_name']
-            #     ],
-            #     self.internet_organization_person['last_name']: entry[
-            #         self.internet_organization_person['last_name']
-            #     ],
-            #     self.internet_organization_person['email']: entry[
-            #         self.internet_organization_person['email']
-            #     ],
-            # }
+            users[attributes[self.posix_account['username']]] = {
+                self.posix_account['full_name']: attributes[
+                    self.posix_account['full_name'][0]
+                ],
+                self.posix_account['user_number']: attributes[
+                    self.posix_account['user_number']
+                ],
+                self.posix_account['group_number']: attributes[
+                    self.posix_account['group_number']
+                ],
+                self.posix_account['home']: attributes[
+                    self.posix_account['home']
+                ],
+                self.internet_organization_person['first_name']: attributes[
+                    self.internet_organization_person['first_name'][0]
+                ],
+                self.internet_organization_person['last_name']: attributes[
+                    self.internet_organization_person['last_name'][0]
+                ],
+                self.internet_organization_person['email']: attributes[
+                    self.internet_organization_person['email'][0]
+                ],
+            }
 
         return users
 
