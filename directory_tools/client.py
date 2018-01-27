@@ -145,5 +145,5 @@ class Client:
                 'loginShell',
                 'gecos',
                 'mail',
-            ]
+            ],
         )

@@ -1,9 +1,16 @@
 import logging
 from sys import argv
 
-from flask import Flask, request, json
+from flask import Flask, request, json, render_template, flash, url_for, session
+from flask import redirect
 
+from directory_tools.change_email_form import ChangeEmailForm
+from directory_tools.change_password_form import ChangePasswordForm
 from directory_tools.directory_tools import Commands
+from directory_tools.login_form import LoginForm
+from directory_tools.profile_form import ProfileForm
+from directory_tools.recover_form import RecoverForm
+from directory_tools.register_form import RegisterForm
 from directory_tools.yaml_config import YamlConfig
 
 
@@ -28,6 +35,7 @@ class WebService:
         WebService.manager_name = config.get('manager-name')
         WebService.manager_password = config.get('manager-password')
         WebService.token = config.get('token')
+        WebService.app.secret_key = config.get('secret_key')
         self.listen_address = config.get('listen_address')
 
     @staticmethod
@@ -43,6 +51,104 @@ class WebService:
         )
 
         return 0
+
+    @staticmethod
+    @app.route('/')
+    def index():
+        return render_template(
+            template_name_or_list='index.html',
+        )
+
+    @staticmethod
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        form = RegisterForm(request.form)
+
+        if request.method == 'POST' and form.validate():
+            # user = User(form.username.data, form.email.data,
+            #             form.password.data)
+            # db_session.add(user)
+            flash('Registration complete.')
+
+            return redirect(url_for('login'))
+
+        return render_template('register.html', form=form)
+
+    @staticmethod
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        form = LoginForm(request.form)
+
+        if request.method == 'POST' and form.validate():
+            session['logged_in'] = True
+            session['username'] = request.form['username']
+            flash('Login successful.')
+
+            return redirect(url_for('index'))
+
+        return render_template('login.html', form=form)
+
+    @staticmethod
+    @app.route('/logout')
+    def logout():
+        session.pop('logged_in', None)
+        session.pop('username', None)
+
+        return redirect(url_for('index'))
+
+    @staticmethod
+    @app.route('/profile', methods=['GET', 'POST'])
+    def profile():
+        form = ProfileForm(request.form)
+
+        if request.method == 'POST' and form.validate():
+            flash('Profile updated.')
+
+            return redirect(url_for('profile'))
+
+        return render_template(template_name_or_list='profile.html', form=form)
+
+    @staticmethod
+    @app.route('/recover', methods=['GET', 'POST'])
+    def recover():
+        form = RecoverForm(request.form)
+
+        if request.method == 'POST' and form.validate():
+            flash('Email sent.')
+
+            return redirect(url_for('recover'))
+
+        return render_template(template_name_or_list='recover.html', form=form)
+
+    @staticmethod
+    @app.route('/change_email', methods=['GET', 'POST'])
+    def change_email():
+        form = ChangeEmailForm(request.form)
+
+        if request.method == 'POST' and form.validate():
+            flash('Email sent.')
+
+            return redirect(url_for('change_email'))
+
+        return render_template(
+            template_name_or_list='change_email.html',
+            form=form,
+        )
+
+    @staticmethod
+    @app.route('/change_password', methods=['GET', 'POST'])
+    def change_password():
+        form = ChangePasswordForm(request.form)
+
+        if request.method == 'POST' and form.validate():
+            flash('Password changed.')
+
+            return redirect(url_for('change_password'))
+
+        return render_template(
+            template_name_or_list='change_password.html',
+            form=form,
+        )
 
     @staticmethod
     def authorize():
