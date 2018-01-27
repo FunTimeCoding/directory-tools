@@ -1,4 +1,5 @@
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
+from logging import INFO
 from os.path import dirname, realpath, join
 
 from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, SIMPLE, ALL, Connection, Server
@@ -6,7 +7,8 @@ from ldap3 import Tls
 from ldap3.core.exceptions import LDAPSSLConfigurationError, LDAPStartTLSError
 from ldap3.core.exceptions import LDAPSocketOpenError, LDAPInvalidFilterError
 from ldap3.core.exceptions import LDAPBindError
-from ldap3.utils.log import set_library_log_detail_level, EXTENDED
+from ldap3.utils.log import set_library_log_activation_level, EXTENDED
+from ldap3.utils.log import set_library_log_detail_level
 
 
 class Client:
@@ -18,6 +20,7 @@ class Client:
             suffix: str,
             secure: bool = False,
     ) -> None:
+        set_library_log_activation_level(INFO)
         set_library_log_detail_level(EXTENDED)
         self.server_name = server_name
         self.manager_distinguished_name = manager_distinguished_name
