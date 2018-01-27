@@ -1,4 +1,4 @@
-import logging
+from logging import basicConfig, getLogger, DEBUG
 from flask import Flask, request, json, render_template, flash, url_for, session
 from flask import redirect
 
@@ -11,11 +11,6 @@ from directory_tools.recover_form import RecoverForm
 from directory_tools.register_form import RegisterForm
 from directory_tools.yaml_config import YamlConfig
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-)
-
 
 class WebService:
     app = Flask(__name__)
@@ -27,6 +22,10 @@ class WebService:
     manager_password = ''
 
     def __init__(self) -> None:
+        basicConfig(
+            level=DEBUG,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        )
         config = YamlConfig('~/.directory-tools.yaml')
         WebService.host = config.get('host')
         WebService.domain = config.get('domain')
@@ -36,7 +35,8 @@ class WebService:
         WebService.token = config.get('token')
         WebService.app.secret_key = config.get('secret_key')
         self.listen_address = config.get('listen_address')
-        logging.debug('Web service initialized.')
+        web_logger = getLogger('web-service')
+        web_logger.debug('Web service initialized.')
 
     @staticmethod
     def main() -> int:

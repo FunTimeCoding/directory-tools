@@ -1,4 +1,4 @@
-import logging
+from logging import getLogger, DEBUG
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
 from os.path import dirname, realpath, join
 
@@ -20,6 +20,8 @@ class Client:
             suffix: str,
             secure: bool = False,
     ) -> None:
+        directory_logger = getLogger('ldap3')
+        directory_logger.setLevel(DEBUG)
         set_library_log_activation_level(EXTENDED)
         set_library_log_hide_sensitive_data(True)
         self.server_name = server_name
@@ -28,7 +30,8 @@ class Client:
         self.suffix = suffix
         self.secure = secure
         self.connection = None
-        logging.debug('Directory client initialized.')
+        client_logger = getLogger('directory-client')
+        client_logger.debug('Directory client initialized.')
 
     def create_server(self) -> Server:
         # PyCharm wants this here to not complain about the return statement.
