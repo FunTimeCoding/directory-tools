@@ -112,14 +112,16 @@ class Commands:
 
     def list_users(self) -> list:
         connection = self.lazy_get_client().lazy_get_connection()
+        users = []
 
         if not connection.search(
                 search_base=self.suffix,
                 search_filter='(objectClass=inetOrgPerson)',
         ):
-            raise RuntimeError(connection.result['description'])
-
-        users = []
+            if connection.result['description'] == 'success':
+                return users
+            else:
+                raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
             users += [entry['dn']]
@@ -157,14 +159,16 @@ class Commands:
 
     def list_groups(self) -> list:
         connection = self.lazy_get_client().lazy_get_connection()
+        groups = []
 
         if not connection.search(
                 search_base=self.suffix,
                 search_filter='(objectClass=posixGroup)',
         ):
-            raise RuntimeError(connection.result['description'])
-
-        groups = []
+            if connection.result['description'] == 'success':
+                return groups
+            else:
+                raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
             groups += [entry['dn']]
@@ -192,14 +196,16 @@ class Commands:
 
     def list_units(self) -> list:
         connection = self.lazy_get_client().lazy_get_connection()
+        units = []
 
         if not connection.search(
                 search_base=self.suffix,
                 search_filter='(objectClass=organizationalUnit)',
         ):
-            raise RuntimeError(connection.result['description'])
-
-        units = []
+            if connection.result['description'] == 'success':
+                return units
+            else:
+                raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
             units += [entry['dn']]
