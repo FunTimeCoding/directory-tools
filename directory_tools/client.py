@@ -11,6 +11,13 @@ from ldap3.utils.log import set_library_log_hide_sensitive_data
 
 import logging
 
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+set_library_log_activation_level(EXTENDED)
+set_library_log_hide_sensitive_data(True)
+
 
 class Client:
     def __init__(
@@ -21,12 +28,6 @@ class Client:
             suffix: str,
             secure: bool = False,
     ) -> None:
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
-        set_library_log_activation_level(EXTENDED)
-        set_library_log_hide_sensitive_data(False)
         self.server_name = server_name
         self.manager_distinguished_name = manager_distinguished_name
         self.manager_password = manager_password
