@@ -36,11 +36,6 @@ class Commands:
 
         return self.client
 
-    def list_users(self) -> str:
-        return self.format_response(
-            self.lazy_get_client().search_user('ou=users,' + self.suffix)
-        )
-
     def search(self, query: str) -> list:
         return self.lazy_get_client().search_user(query)
 
@@ -115,6 +110,22 @@ class Commands:
         if not connection.delete(dn='uid=' + name + ',ou=users,' + self.suffix):
             raise RuntimeError(connection.result['description'])
 
+    def list_users(self) -> list:
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.search(
+                search_base=self.suffix,
+                search_filter='(objectClass=inetOrgPerson)',
+        ):
+            raise RuntimeError(connection.result['description'])
+
+        users = []
+
+        for entry in connection.response:
+            users += [entry['dn']]
+
+        return users
+
     def add_group(self, name: str) -> None:
         posix_group = {
             'name': 'cn',  # must
@@ -144,8 +155,21 @@ class Commands:
     def show_group(self, name: str) -> str:
         pass
 
-    def list_groups(self) -> str:
-        pass
+    def list_groups(self) -> list:
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.search(
+                search_base=self.suffix,
+                search_filter='(objectClass=posixGroup)',
+        ):
+            raise RuntimeError(connection.result['description'])
+
+        groups = []
+
+        for entry in connection.response:
+            groups += [entry['dn']]
+
+        return groups
 
     def add_unit(self, name: str):
         connection = self.lazy_get_client().lazy_get_connection()
@@ -166,7 +190,7 @@ class Commands:
     def show_unit(self, name: str):
         pass
 
-    def list_units(self):
+    def list_units(self) -> list:
         connection = self.lazy_get_client().lazy_get_connection()
 
         if not connection.search(
@@ -175,8 +199,12 @@ class Commands:
         ):
             raise RuntimeError(connection.result['description'])
 
+        units = []
+
         for entry in connection.response:
-            print(entry)
+            units += [entry['dn']]
+
+        return units
 
     def status(self) -> str:
         return self.format_response(
