@@ -1,4 +1,11 @@
 {% extends 'layout.html' %}
 {% block content %}
 <h1>Index</h1>
+<p>
+    {% if session.logged_in %}
+    Logged in as: {{ session.username }}
+    {% else %}
+    Not logged in.
+    {% endif %}
+</p>
 {% endblock %}

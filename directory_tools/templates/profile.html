@@ -1,4 +1,13 @@
 {% extends 'layout.html' %}
 {% block content %}
+{% from 'form_helper.html' import render_field %}
 <h1>Profile</h1>
+<form method=post>
+    <dl>
+        {{ render_field(form.username) }}
+        {{ render_field(form.first_name) }}
+        {{ render_field(form.last_name) }}
+    </dl>
+    <p><input type=submit value=Update></p>
+</form>
 {% endblock %}

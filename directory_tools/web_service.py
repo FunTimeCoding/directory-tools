@@ -101,7 +101,10 @@ class WebService:
         form = ProfileForm(request.form)
 
         if request.method == 'POST' and form.validate():
-            flash('Profile updated.')
+            flash(
+                'Profile updated: ' + form.username.data + ' '
+                + form.first_name.data + ' ' + form.last_name.data
+            )
 
             return redirect(url_for('profile'))
 
@@ -113,7 +116,7 @@ class WebService:
         form = RecoverForm(request.form)
 
         if request.method == 'POST' and form.validate():
-            flash('Email sent.')
+            flash('Email sent.' + form.email.data + ' ' + form.username.data)
 
             return redirect(url_for('recover'))
 
@@ -125,7 +128,7 @@ class WebService:
         form = ChangeEmailForm(request.form)
 
         if request.method == 'POST' and form.validate():
-            flash('Email sent.')
+            flash('Email sent: ' + form.email.data)
 
             return redirect(url_for('change_email'))
 
@@ -140,7 +143,10 @@ class WebService:
         form = ChangePasswordForm(request.form)
 
         if request.method == 'POST' and form.validate():
-            flash('Password changed.')
+            flash(
+                'Password changed: ' + form.current_password.data + ' '
+                + form.password.data + ' ' + form.confirm.data
+            )
 
             return redirect(url_for('change_password'))
 

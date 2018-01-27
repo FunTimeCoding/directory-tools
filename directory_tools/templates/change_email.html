@@ -1,4 +1,11 @@
 {% extends 'layout.html' %}
 {% block content %}
+{% from 'form_helper.html' import render_field %}
 <h1>Change email</h1>
+<form method=post>
+    <dl>
+        {{ render_field(form.email) }}
+    </dl>
+    <p><input type=submit value=Update></p>
+</form>
 {% endblock %}

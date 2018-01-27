@@ -19,10 +19,6 @@
     {% endif %}
 </p>
 
-{% if session.logged_in %}
-<p>Logged in as: {{ session.username }}</p>
-{% endif %}
-
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 <ul class=flashes>
