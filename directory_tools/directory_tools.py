@@ -168,11 +168,15 @@ class Commands:
 
     def list_units(self):
         connection = self.lazy_get_client().lazy_get_connection()
-        result = connection.search(
-            search_base=self.suffix,
-            search_filter='(ou=*)',
-        )
-        print(result)
+
+        if not connection.search(
+                search_base=self.suffix,
+                search_filter='(object_class=organizationalUnit)',
+        ):
+            raise RuntimeError(connection.result['description'])
+
+        for entry in connection.response:
+            print(entry)
 
     def status(self) -> str:
         return self.format_response(
