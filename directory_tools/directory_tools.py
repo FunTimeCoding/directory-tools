@@ -70,7 +70,8 @@ class Commands:
             group: str
     ) -> None:
         full_name = first_name + ' ' + last_name
-        result = self.lazy_get_client().lazy_get_connection().add(
+        connection = self.lazy_get_client().lazy_get_connection()
+        result = connection.add(
             dn='uid=' + username + ',ou=users,' + self.suffix,
             object_class=['inetOrgPerson', 'posixAccount', 'shadowAccount'],
             # TODO: get uid increment
@@ -94,7 +95,8 @@ class Commands:
             },
         )
 
-        print(result)
+        if not result:
+            print(connection.result)
 
     def remove_user(self, name: str) -> None:
         pass
