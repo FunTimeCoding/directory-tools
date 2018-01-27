@@ -157,9 +157,7 @@ class Commands:
                 raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
-            users[entry[self.posix_account['username']]] = {
-                entry
-            }
+            users[entry[self.posix_account['username']]] = entry
             # users[entry[self.posix_account['username']]] = {
             #     self.posix_account['full_name']: entry[
             #         self.posix_account['full_name']
