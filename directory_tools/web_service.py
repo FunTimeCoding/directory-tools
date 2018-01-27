@@ -1,4 +1,4 @@
-from logging import basicConfig, getLogger, DEBUG
+from logging import basicConfig, INFO
 from flask import Flask, request, json, render_template, flash, url_for, session
 from flask import redirect
 
@@ -23,7 +23,7 @@ class WebService:
 
     def __init__(self) -> None:
         basicConfig(
-            level=DEBUG,
+            level=INFO,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         )
         config = YamlConfig('~/.directory-tools.yaml')
@@ -35,8 +35,6 @@ class WebService:
         WebService.token = config.get('token')
         WebService.app.secret_key = config.get('secret_key')
         self.listen_address = config.get('listen_address')
-        # web_logger = getLogger('web-service')
-        # web_logger.debug('Web service initialized.')
 
     @staticmethod
     def main() -> int:

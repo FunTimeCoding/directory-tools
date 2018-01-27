@@ -1,4 +1,3 @@
-from logging import getLogger, DEBUG, StreamHandler, Formatter
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
 from os.path import dirname, realpath, join
 
@@ -7,9 +6,7 @@ from ldap3 import Tls
 from ldap3.core.exceptions import LDAPSSLConfigurationError, LDAPStartTLSError
 from ldap3.core.exceptions import LDAPSocketOpenError, LDAPInvalidFilterError
 from ldap3.core.exceptions import LDAPBindError
-from ldap3.utils.log import set_library_log_activation_level, EXTENDED
-from ldap3.utils.log import set_library_log_hide_sensitive_data
-from ldap3.utils.log import set_library_log_detail_level
+from ldap3.utils.log import set_library_log_detail_level, EXTENDED
 
 
 class Client:
@@ -21,25 +18,13 @@ class Client:
             suffix: str,
             secure: bool = False,
     ) -> None:
-        # directory_logger = getLogger('ldap3')
-        # directory_logger.setLevel(DEBUG)
-        # handler = StreamHandler()
-        # handler.setLevel(DEBUG)
-        # handler.setFormatter(
-        #     Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        # )
-        # directory_logger.addHandler(handler)
-        set_library_log_activation_level(DEBUG)
         set_library_log_detail_level(EXTENDED)
-        # set_library_log_hide_sensitive_data(True)
         self.server_name = server_name
         self.manager_distinguished_name = manager_distinguished_name
         self.manager_password = manager_password
         self.suffix = suffix
         self.secure = secure
         self.connection = None
-        # client_logger = getLogger('directory-client')
-        # client_logger.debug('Directory client initialized.')
 
     def create_server(self) -> Server:
         # PyCharm wants this here to not complain about the return statement.
