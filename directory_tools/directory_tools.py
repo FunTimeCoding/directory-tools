@@ -110,13 +110,13 @@ class Commands:
                 search_filter='(uid=' + name + ')',
                 attributes=[
                     self.posix_account['username'],
-                    self.internet_organization_person['first_name'],
-                    self.internet_organization_person['last_name'],
-                    self.internet_organization_person['email'],
                     self.posix_account['full_name'],
                     self.posix_account['user_number'],
                     self.posix_account['group_number'],
                     self.posix_account['home'],
+                    self.internet_organization_person['first_name'],
+                    self.internet_organization_person['last_name'],
+                    self.internet_organization_person['email'],
                 ],
         ):
             if connection.result['description'] == 'success':
@@ -124,7 +124,7 @@ class Commands:
             else:
                 raise RuntimeError(connection.result['description'])
 
-        return str(connection.response[0])
+        return str(connection.response[0]['attributes'])
 
     def list_users(self) -> list:
         connection = self.lazy_get_client().lazy_get_connection()
