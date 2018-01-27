@@ -133,13 +133,23 @@ class Commands:
 
         return str(connection.response[0]['attributes'])
 
-    def list_users(self) -> list:
+    def list_users(self) -> dict:
         connection = self.lazy_get_client().lazy_get_connection()
-        users = []
+        users = {}
 
         if not connection.search(
                 search_base=self.suffix,
                 search_filter='(objectClass=inetOrgPerson)',
+                attributes=[
+                    self.posix_account['username'],
+                    self.posix_account['full_name'],
+                    self.posix_account['user_number'],
+                    self.posix_account['group_number'],
+                    self.posix_account['home'],
+                    self.internet_organization_person['first_name'],
+                    self.internet_organization_person['last_name'],
+                    self.internet_organization_person['email'],
+                ],
         ):
             if connection.result['description'] == 'success':
                 return users
@@ -147,7 +157,27 @@ class Commands:
                 raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
-            users += [entry['dn']]
+            users[self.posix_account['username']] = {
+                self.posix_account['full_name']: entry[
+                    self.posix_account['full_name']
+                ],
+                self.posix_account['user_number']: entry[
+                    self.posix_account['user_number']
+                ],
+                self.posix_account['group_number']: entry[
+                    self.posix_account['group_number']
+                ],
+                self.posix_account['home']: entry[self.posix_account['home']],
+                self.internet_organization_person['first_name']: entry[
+                    self.internet_organization_person['first_name']
+                ],
+                self.internet_organization_person['last_name']: entry[
+                    self.internet_organization_person['last_name']
+                ],
+                self.internet_organization_person['email']: entry[
+                    self.internet_organization_person['email']
+                ],
+            }
 
         return users
 
@@ -191,13 +221,17 @@ class Commands:
 
         return str(connection.response[0]['attributes'])
 
-    def list_groups(self) -> list:
+    def list_groups(self) -> dict:
         connection = self.lazy_get_client().lazy_get_connection()
-        groups = []
+        groups = {}
 
         if not connection.search(
                 search_base=self.suffix,
                 search_filter='(objectClass=posixGroup)',
+                attributes=[
+                    self.posix_group['name'],
+                    self.posix_group['number'],
+                ],
         ):
             if connection.result['description'] == 'success':
                 return groups
@@ -205,7 +239,9 @@ class Commands:
                 raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
-            groups += [entry['dn']]
+            groups[entry[self.posix_group['number']]] = entry[
+                self.posix_group['name']
+            ]
 
         return groups
 
@@ -249,6 +285,9 @@ class Commands:
         if not connection.search(
                 search_base=self.suffix,
                 search_filter='(objectClass=organizationalUnit)',
+                attributes=[
+                    self.organizational_unit['name']
+                ],
         ):
             if connection.result['description'] == 'success':
                 return units
@@ -256,7 +295,7 @@ class Commands:
                 raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
-            units += [entry['dn']]
+            units += [entry[self.organizational_unit['name']]]
 
         return units
 
