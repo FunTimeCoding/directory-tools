@@ -73,7 +73,7 @@ class Client:
                 user=self.manager_distinguished_name,
                 password=self.manager_password,
                 authentication=SIMPLE,
-                version=3
+                version=3,
             )
         except LDAPSocketOpenError as exception:
             print('LDAPSocketOpenError: ' + str(exception))

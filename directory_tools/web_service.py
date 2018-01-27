@@ -72,8 +72,7 @@ class WebService:
         form = RegisterForm(request.form)
 
         if request.method == 'POST' and form.validate():
-            commands = WebService.create_commands()
-            commands.add_user(
+            WebService.create_commands().add_user(
                 username=form.username.data,
                 first_name=form.first_name.data,
                 last_name=form.last_name.data,
