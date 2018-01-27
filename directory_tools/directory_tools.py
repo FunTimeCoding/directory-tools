@@ -123,8 +123,8 @@ class Commands:
                 posix_account['group_number']: 2000,
                 posix_account['home']: '/home/' + username,
                 posix_account['password']: self.encrypt_password(password),
-                internet_organization_person['given_name']: first_name,
-                internet_organization_person['surname']: last_name,
+                internet_organization_person['first_name']: first_name,
+                internet_organization_person['last_name']: last_name,
                 internet_organization_person['email']: email,
             },
         )
