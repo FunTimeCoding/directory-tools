@@ -2,11 +2,11 @@ import logging
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
 from os.path import dirname, realpath, join
 
-from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, SIMPLE
-from ldap3 import Server, Connection, Tls
+from ldap3 import AUTO_BIND_TLS_BEFORE_BIND, SIMPLE, ALL, Connection, Server
+from ldap3 import Tls
 from ldap3.core.exceptions import LDAPSSLConfigurationError, LDAPStartTLSError
-from ldap3.core.exceptions import LDAPSocketOpenError, LDAPBindError
-from ldap3.core.exceptions import LDAPInvalidFilterError
+from ldap3.core.exceptions import LDAPSocketOpenError, LDAPInvalidFilterError
+from ldap3.core.exceptions import LDAPBindError
 from ldap3.utils.log import set_library_log_activation_level, EXTENDED
 from ldap3.utils.log import set_library_log_hide_sensitive_data
 
@@ -20,11 +20,6 @@ class Client:
             suffix: str,
             secure: bool = False,
     ) -> None:
-        logging.basicConfig(
-            filename='ldap3.log',
-            level=logging.DEBUG,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        )
         set_library_log_activation_level(EXTENDED)
         set_library_log_hide_sensitive_data(True)
         self.server_name = server_name
@@ -33,7 +28,7 @@ class Client:
         self.suffix = suffix
         self.secure = secure
         self.connection = None
-        logging.debug('Client initialized.')
+        logging.debug('Directory client initialized.')
 
     def create_server(self) -> Server:
         # PyCharm wants this here to not complain about the return statement.
@@ -62,7 +57,8 @@ class Client:
             host=self.server_name,
             port=389,
             # TODO: Why no get_info?
-            get_info=False,
+            # get_info=False,
+            get_info=ALL,
             tls=transport_layer_security,
         )
 
