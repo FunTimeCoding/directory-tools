@@ -1,3 +1,4 @@
+from directory_tools.command_process import CommandProcess
 from directory_tools.yaml_config import YamlConfig
 from yaml import dump
 from sys import argv
@@ -53,15 +54,45 @@ class Commands:
             self.search('(cn=' + name + ')')
         )
 
+    @staticmethod
+    def encrypt_password(password: str) -> str:
+        return CommandProcess(
+            ['slappasswd', '-s', password]
+        ).get_standard_output()
+
     def add_user(
             self,
-            name: str,
-            full_name: str,
+            username: str,
+            first_name: str,
+            last_name: str,
             password: str,
             email: str,
             group: str
     ) -> None:
-        pass
+        full_name = first_name + ' ' + last_name
+        self.lazy_get_client().lazy_get_connection().add(
+            dn='uid=' + username + ',ou=users,' + self.suffix,
+            object_class=['inetOrgPerson', 'posixAccount', 'shadowAccount'],
+            # TODO: get uid increment
+            # TODO: get gid
+            # TODO: create ou if not exists?
+            attributes={
+                'cn': full_name,
+                'sn': last_name,
+                'uid': username,
+                'uidNumber': 2000,
+                'gidNumber': 2000,
+                'homeDirectory': '',
+                'loginShell': '/bin/bash',
+                'gecos': full_name,
+                'userPassword': self.encrypt_password(password),
+                'displayName': username,
+                'mail': email,
+                'shadowLastChange': 0,
+                'shadowMax': 0,
+                'shadowWarning': 0,
+            },
+        )
 
     def remove_user(self, name: str) -> None:
         pass
@@ -133,8 +164,9 @@ class DirectoryTools:
         if 'user' in self.parsed_arguments:
             if 'add' in self.parsed_arguments:
                 commands.add_user(
-                    name=self.parsed_arguments.name,
-                    full_name=self.parsed_arguments.full_name,
+                    username=self.parsed_arguments.name,
+                    first_name=self.parsed_arguments.first_name,
+                    last_name=self.parsed_arguments.last_name,
                     password=self.parsed_arguments.password,
                     email=self.parsed_arguments.email,
                     group=self.parsed_arguments.group,

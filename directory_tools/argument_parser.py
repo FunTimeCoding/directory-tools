@@ -31,7 +31,8 @@ class Parser:
 
         add_parent = CustomArgumentParser(add_help=False)
         add_parent.add_argument('--name', required=True)
-        add_parent.add_argument('--full-name', required=True)
+        add_parent.add_argument('--first-name', required=True)
+        add_parent.add_argument('--last-name', required=True)
         add_parent.add_argument('--password', required=True)
         add_parent.add_argument('--email', required=True)
         add_parent.add_argument('--group', required=True)

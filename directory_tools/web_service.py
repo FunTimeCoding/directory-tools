@@ -52,6 +52,16 @@ class WebService:
         return 0
 
     @staticmethod
+    def create_commands() -> Commands:
+        return Commands(
+            domain=WebService.domain,
+            top_level=WebService.top_level,
+            host=WebService.host,
+            manager_name=WebService.manager_name,
+            manager_password=WebService.manager_password,
+        )
+
+    @staticmethod
     @app.route('/')
     def index():
         return render_template(template_name_or_list='index.html')
@@ -62,6 +72,15 @@ class WebService:
         form = RegisterForm(request.form)
 
         if request.method == 'POST' and form.validate():
+            commands = WebService.create_commands()
+            commands.add_user(
+                username=form.username.data,
+                first_name=form.first_name.data,
+                last_name=form.last_name.data,
+                password=form.password.data,
+                email=form.email.data,
+                group='',
+            )
             # user = User(form.username.data, form.email.data,
             #             form.password.data)
             # db_session.add(user)
@@ -208,13 +227,7 @@ class WebService:
         if authorization_result != '':
             return authorization_result, 401
 
-        commands = Commands(
-            domain=WebService.domain,
-            top_level=WebService.top_level,
-            host=WebService.host,
-            manager_name=WebService.manager_name,
-            manager_password=WebService.manager_password,
-        )
+        commands = WebService.create_commands()
 
         if request.method == 'GET':
             if name == '':
@@ -237,13 +250,7 @@ class WebService:
         if authorization_result != '':
             return authorization_result, 401
 
-        commands = Commands(
-            domain=WebService.domain,
-            top_level=WebService.top_level,
-            host=WebService.host,
-            manager_name=WebService.manager_name,
-            manager_password=WebService.manager_password,
-        )
+        commands = WebService.create_commands()
 
         if request.method == 'GET':
             if name == '':
@@ -253,9 +260,10 @@ class WebService:
         elif request.method == 'POST':
             return json.dumps(
                 commands.add_user(
-                    name=str(request.json.get('name')),
+                    username=str(request.json.get('name')),
                     email=str(request.json.get('email')),
-                    full_name=str(request.json.get('full_name')),
+                    first_name=str(request.json.get('first_name')),
+                    last_name=str(request.json.get('last_name')),
                     group=str(request.json.get('group')),
                     password=str(request.json.get('password')),
                 )
