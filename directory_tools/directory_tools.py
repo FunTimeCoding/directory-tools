@@ -158,7 +158,7 @@ class Commands:
 
         for entry in connection.response:
             attributes = entry['attributes']
-            users[attributes[self.posix_account['username']]] = attributes
+            users[attributes[self.posix_account['username']][0]] = attributes
             # users[entry[self.posix_account['username']]] = {
             #     self.posix_account['full_name']: entry[
             #         self.posix_account['full_name']
