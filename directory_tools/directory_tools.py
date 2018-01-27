@@ -157,27 +157,30 @@ class Commands:
                 raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
-            users[self.posix_account['username']] = {
-                self.posix_account['full_name']: entry[
-                    self.posix_account['full_name']
-                ],
-                self.posix_account['user_number']: entry[
-                    self.posix_account['user_number']
-                ],
-                self.posix_account['group_number']: entry[
-                    self.posix_account['group_number']
-                ],
-                self.posix_account['home']: entry[self.posix_account['home']],
-                self.internet_organization_person['first_name']: entry[
-                    self.internet_organization_person['first_name']
-                ],
-                self.internet_organization_person['last_name']: entry[
-                    self.internet_organization_person['last_name']
-                ],
-                self.internet_organization_person['email']: entry[
-                    self.internet_organization_person['email']
-                ],
+            users[entry[self.posix_account['username']]] = {
+                entry
             }
+            # users[entry[self.posix_account['username']]] = {
+            #     self.posix_account['full_name']: entry[
+            #         self.posix_account['full_name']
+            #     ],
+            #     self.posix_account['user_number']: entry[
+            #         self.posix_account['user_number']
+            #     ],
+            #     self.posix_account['group_number']: entry[
+            #         self.posix_account['group_number']
+            #     ],
+            #     self.posix_account['home']: entry[self.posix_account['home']],
+            #     self.internet_organization_person['first_name']: entry[
+            #         self.internet_organization_person['first_name']
+            #     ],
+            #     self.internet_organization_person['last_name']: entry[
+            #         self.internet_organization_person['last_name']
+            #     ],
+            #     self.internet_organization_person['email']: entry[
+            #         self.internet_organization_person['email']
+            #     ],
+            # }
 
         return users
 
