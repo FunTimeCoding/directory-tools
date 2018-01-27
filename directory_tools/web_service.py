@@ -1,5 +1,4 @@
 import logging
-
 from flask import Flask, request, json, render_template, flash, url_for, session
 from flask import redirect
 

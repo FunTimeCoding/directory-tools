@@ -1,3 +1,4 @@
+import logging
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
 from os.path import dirname, realpath, join
 
@@ -17,6 +18,10 @@ class Client:
             suffix: str,
             secure: bool = False,
     ) -> None:
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        )
         self.server_name = server_name
         self.manager_distinguished_name = manager_distinguished_name
         self.manager_password = manager_password
