@@ -1,4 +1,3 @@
-import logging
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
 from os.path import dirname, realpath, join
 
@@ -9,6 +8,8 @@ from ldap3.core.exceptions import LDAPSocketOpenError, LDAPBindError
 from ldap3.core.exceptions import LDAPInvalidFilterError
 from ldap3.utils.log import set_library_log_activation_level, EXTENDED
 from ldap3.utils.log import set_library_log_hide_sensitive_data
+
+import logging
 
 
 class Client:
