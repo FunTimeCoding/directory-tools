@@ -171,7 +171,7 @@ class Commands:
 
         if not connection.search(
                 search_base=self.suffix,
-                search_filter='(object_class=organizationalUnit)',
+                search_filter='(objectClass=organizationalUnit)',
         ):
             raise RuntimeError(connection.result['description'])
 
