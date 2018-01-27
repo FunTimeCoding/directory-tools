@@ -113,7 +113,7 @@ class Client:
                 attributes=attributes,
             )
         except LDAPInvalidFilterError as exception:
-            print('LDAPInvalidFilterError: ' + str(exception) +  ': ' + query)
+            print('LDAPInvalidFilterError: ' + str(exception) + ': ' + query)
 
             exit(5)
 

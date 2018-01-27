@@ -1,5 +1,4 @@
 import logging
-from sys import argv
 
 from flask import Flask, request, json, render_template, flash, url_for, session
 from flask import redirect
@@ -23,7 +22,7 @@ class WebService:
     manager_name = ''
     manager_password = ''
 
-    def __init__(self, arguments: list) -> None:
+    def __init__(self) -> None:
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -40,7 +39,7 @@ class WebService:
 
     @staticmethod
     def main() -> int:
-        return WebService(argv[1:]).run()
+        return WebService().run()
 
     def run(self) -> int:
         # Avoid triggering a reload. Otherwise stats gets loaded after a
@@ -221,7 +220,15 @@ class WebService:
             else:
                 return json.dumps(commands.show_user(name=name))
         elif request.method == 'POST':
-            return json.dumps(commands.add_user(str(request.json.get('name'))))
+            return json.dumps(
+                commands.add_user(
+                    name=str(request.json.get('name')),
+                    email=str(request.json.get('email')),
+                    full_name=str(request.json.get('full_name')),
+                    group=str(request.json.get('group')),
+                    password=str(request.json.get('password')),
+                )
+            )
         elif request.method == 'DELETE':
             return json.dumps(commands.remove_user(name))
         else:
