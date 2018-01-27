@@ -1,4 +1,4 @@
-from logging import getLogger, DEBUG
+from logging import getLogger, DEBUG, StreamHandler, Formatter
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
 from os.path import dirname, realpath, join
 
@@ -22,6 +22,12 @@ class Client:
     ) -> None:
         directory_logger = getLogger('ldap3')
         directory_logger.setLevel(DEBUG)
+        handler = StreamHandler()
+        handler.setLevel(DEBUG)
+        handler.setFormatter(
+            Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        )
+        directory_logger.addHandler(handler)
         set_library_log_activation_level(EXTENDED)
         set_library_log_hide_sensitive_data(True)
         self.server_name = server_name
