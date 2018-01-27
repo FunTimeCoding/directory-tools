@@ -36,19 +36,6 @@ class Commands:
 
         return self.client
 
-    def search(self, query: str) -> list:
-        return self.lazy_get_client().search_user(query)
-
-    def show_user(self, name: str):
-        return self.format_response(
-            self.search('(uid=' + name + ')')
-        )
-
-    def show_user_by_full_name(self, name: str):
-        return self.format_response(
-            self.search('(cn=' + name + ')')
-        )
-
     @staticmethod
     def encrypt_password(password: str) -> str:
         return CommandProcess(
@@ -109,6 +96,20 @@ class Commands:
 
         if not connection.delete(dn='uid=' + name + ',ou=users,' + self.suffix):
             raise RuntimeError(connection.result['description'])
+
+    def show_user(self, name: str) -> str:
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.search(
+                search_base='ou=users,' + self.suffix,
+                search_filter='(uid=' + name + ')',
+        ):
+            if connection.result['description'] == 'success':
+                return ''
+            else:
+                raise RuntimeError(connection.result['description'])
+
+        return str(connection.response)
 
     def list_users(self) -> list:
         connection = self.lazy_get_client().lazy_get_connection()
