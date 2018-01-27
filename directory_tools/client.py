@@ -1,3 +1,4 @@
+import logging
 from _ssl import PROTOCOL_TLSv1_2, CERT_REQUIRED
 from os.path import dirname, realpath, join
 
@@ -9,15 +10,6 @@ from ldap3.core.exceptions import LDAPInvalidFilterError
 from ldap3.utils.log import set_library_log_activation_level, EXTENDED
 from ldap3.utils.log import set_library_log_hide_sensitive_data
 
-import logging
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-set_library_log_activation_level(EXTENDED)
-set_library_log_hide_sensitive_data(True)
-
 
 class Client:
     def __init__(
@@ -28,6 +20,13 @@ class Client:
             suffix: str,
             secure: bool = False,
     ) -> None:
+        logging.basicConfig(
+            filename='ldap3.log',
+            level=logging.DEBUG,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        )
+        set_library_log_activation_level(EXTENDED)
+        set_library_log_hide_sensitive_data(True)
         self.server_name = server_name
         self.manager_distinguished_name = manager_distinguished_name
         self.manager_password = manager_password
