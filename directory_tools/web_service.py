@@ -24,7 +24,7 @@ class WebService:
 
     def __init__(self) -> None:
         logging.basicConfig(
-            level=logging.INFO,
+            level=logging.DEBUG,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
         config = YamlConfig('~/.directory-tools.yaml')

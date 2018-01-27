@@ -1,3 +1,4 @@
+import logging
 from directory_tools.command_process import CommandProcess
 from directory_tools.yaml_config import YamlConfig
 from yaml import dump
@@ -141,6 +142,10 @@ class Commands:
 
 class DirectoryTools:
     def __init__(self, arguments: list):
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        )
         self.parser = Parser(arguments)
         self.parsed_arguments = self.parser.parsed_arguments
         config = YamlConfig('~/.directory-tools.yaml')
