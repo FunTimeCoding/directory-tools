@@ -83,11 +83,11 @@ class WebService:
                 flash('Registration complete.')
 
                 return redirect(url_for('login'))
-            except BaseException as exception:
-                message = str(exception)
+            except RuntimeError as error:
+                message = str(error)
 
                 if message == 'entryAlreadyExists':
-                    flash('User already exists.')
+                    flash('Username already exists.')
                 else:
                     flash('Unexpected error: ' + message)
 

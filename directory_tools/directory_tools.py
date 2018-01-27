@@ -60,25 +60,6 @@ class Commands:
             ['slappasswd', '-s', password]
         ).get_standard_output()
 
-    def add_unit(self, name: str):
-        connection = self.lazy_get_client().lazy_get_connection()
-
-        if not connection.add(
-                dn='ou=' + name + ',' + self.suffix,
-                object_class=['organizationalUnit'],
-                attributes={'ou': name}
-        ):
-            raise RuntimeError(connection.result['description'])
-
-    def remove_unit(self, name: str):
-        pass
-
-    def show_unit(self, name: str):
-        pass
-
-    def list_units(self):
-        pass
-
     def add_user(
             self,
             username: str,
@@ -88,7 +69,6 @@ class Commands:
             email: str,
             group: str
     ) -> None:
-        connection = self.lazy_get_client().lazy_get_connection()
         posix_account = {
             'full_name': 'cn',  # must
             'username': 'uid',  # must
@@ -102,6 +82,7 @@ class Commands:
             'last_name': 'sn',  # may
             'email': 'mail',  # may
         }
+        connection = self.lazy_get_client().lazy_get_connection()
 
         if not connection.add(
                 dn='uid=' + username + ',ou=users,' + self.suffix,
@@ -129,19 +110,69 @@ class Commands:
             raise RuntimeError(connection.result['description'])
 
     def remove_user(self, name: str) -> None:
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.delete(dn='uid=' + name + ',ou=users,' + self.suffix):
+            raise RuntimeError(connection.result['description'])
+
+    def add_group(self, name: str) -> None:
+        posix_group = {
+            'name': 'cn',  # must
+            'number': 'gidNumber',  # must
+        }
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.add(
+                dn='cn=' + name + ',ou=groups,' + self.suffix,
+                object_class=[
+                    'top',
+                    'posixGroup',  # super: top
+                ],
+                attributes={
+                    posix_group['name']: name,
+                    posix_group['number']: 2000,
+                }
+        ):
+            raise RuntimeError(connection.result['description'])
+
+    def remove_group(self, name: str) -> None:
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.delete(dn='cn=' + name + ',ou=groups,' + self.suffix):
+            raise RuntimeError(connection.result['description'])
+
+    def show_group(self, name: str) -> str:
         pass
 
     def list_groups(self) -> str:
         pass
 
-    def show_group(self, name: str) -> str:
+    def add_unit(self, name: str):
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.add(
+                dn='ou=' + name + ',' + self.suffix,
+                object_class=['organizationalUnit'],
+                attributes={'ou': name}
+        ):
+            raise RuntimeError(connection.result['description'])
+
+    def remove_unit(self, name: str):
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.delete(dn='ou=' + name + ',' + self.suffix):
+            raise RuntimeError(connection.result['description'])
+
+    def show_unit(self, name: str):
         pass
 
-    def add_group(self, name: str) -> None:
-        pass
-
-    def remove_group(self, name: str) -> None:
-        pass
+    def list_units(self):
+        connection = self.lazy_get_client().lazy_get_connection()
+        result = connection.search(
+            search_base=self.suffix,
+            search_filter='(ou=*)',
+        )
+        print(result)
 
     def status(self) -> str:
         return self.format_response(
