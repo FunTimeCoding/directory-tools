@@ -88,7 +88,7 @@ class WebService:
                 'Registration complete: ' + form.username.data + ' '
                 + form.email.data + ' ' + form.first_name.data + ' '
                 + form.last_name.data + ' ' + form.password.data + ' '
-                + form.confirm.data + ' ' + form.accept_tos.data
+                + form.confirm.data + ' ' + str(form.accept_tos.data)
             )
 
             return redirect(url_for('login'))
