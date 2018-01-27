@@ -12,6 +12,7 @@ class Parser:
         subparsers = self.parser.add_subparsers()
         self.add_user_child_parser(subparsers)
         self.add_group_child_parser(subparsers)
+        self.add_unit_child_parser(subparsers)
         self.add_status_child_parser(subparsers)
         self.parsed_arguments = self.parser.parse_args(arguments)
 
@@ -105,6 +106,50 @@ class Parser:
         list_parser = group_subparsers.add_parser(
             'list',
             help='list all groups'
+        )
+        list_parser.add_argument('list', action='store_true')
+
+    @staticmethod
+    def add_unit_child_parser(subparsers) -> None:
+        unit_parent = CustomArgumentParser(add_help=False)
+        unit_parser = subparsers.add_parser(
+            'unit',
+            parents=[unit_parent],
+            help='manage units'
+        )
+        unit_parser.add_argument('unit', action='store_true')
+        unit_subparsers = unit_parser.add_subparsers()
+
+        add_parent = CustomArgumentParser(add_help=False)
+        add_parent.add_argument('--name', required=True)
+        add_parser = unit_subparsers.add_parser(
+            'add',
+            parents=[add_parent],
+            help='add a unit'
+        )
+        add_parser.add_argument('add', action='store_true')
+
+        remove_parent = CustomArgumentParser(add_help=False)
+        remove_parent.add_argument('--name', required=True)
+        remove_parser = unit_subparsers.add_parser(
+            'remove',
+            parents=[remove_parent],
+            help='remove a unit'
+        )
+        remove_parser.add_argument('remove', action='store_true')
+
+        show_parent = CustomArgumentParser(add_help=False)
+        show_parent.add_argument('--name', required=True)
+        show_parser = unit_subparsers.add_parser(
+            'show',
+            parents=[show_parent],
+            help='show a unit'
+        )
+        show_parser.add_argument('show', action='store_true')
+
+        list_parser = unit_subparsers.add_parser(
+            'list',
+            help='list all units'
         )
         list_parser.add_argument('list', action='store_true')
 

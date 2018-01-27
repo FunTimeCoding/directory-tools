@@ -60,6 +60,27 @@ class Commands:
             ['slappasswd', '-s', password]
         ).get_standard_output()
 
+    def add_unit(self, name: str):
+        connection = self.lazy_get_client().lazy_get_connection()
+        result = connection.add(
+            dn='ou=' + name + ',' + self.suffix,
+            object_class=['organizationalUnit'],
+            attributes={'ou': name}
+        )
+
+        if not result:
+            # TODO: Handle errors.
+            pass
+
+    def remove_unit(self, name: str):
+        pass
+
+    def show_unit(self, name: str):
+        pass
+
+    def list_units(self):
+        pass
+
     def add_user(
             self,
             username: str,
@@ -72,31 +93,44 @@ class Commands:
         full_name = first_name + ' ' + last_name
         connection = self.lazy_get_client().lazy_get_connection()
         result = connection.add(
-            dn='uid=' + username + ',ou=users,' + self.suffix,
-            object_class=['inetOrgPerson', 'posixAccount', 'shadowAccount'],
-            # TODO: get uid increment
-            # TODO: get gid
-            # TODO: create ou if not exists?
+            dn='cn=' + username + ',ou=users,' + self.suffix,
+            object_class=['posixAccount'],
             attributes={
                 'cn': full_name,
-                'sn': last_name,
                 'uid': username,
-                'uidNumber': 2000,
-                'gidNumber': 2000,
-                'homeDirectory': '',
-                'loginShell': '/bin/bash',
-                'gecos': full_name,
-                'userPassword': self.encrypt_password(password),
-                'displayName': username,
-                'mail': email,
-                'shadowLastChange': 0,
-                'shadowMax': 0,
-                'shadowWarning': 0,
-            },
+                'uidNumber': 1000,
+                'gidNumber': 1000,
+                'homeDirectory': '/home/' + username,
+            }
         )
 
+        # result = connection.add(
+        #     dn='uid=' + username + ',ou=users,' + self.suffix,
+        #     object_class=['inetOrgPerson', 'posixAccount', 'shadowAccount'],
+        #     # TODO: get uid increment
+        #     # TODO: get gid
+        #     # TODO: create ou if not exists?
+        #     attributes={
+        #         'cn': full_name,
+        #         'sn': last_name,
+        #         'uid': username,
+        #         'uidNumber': 2000,
+        #         'gidNumber': 2000,
+        #         'homeDirectory': '',
+        #         'loginShell': '/bin/bash',
+        #         'gecos': full_name,
+        #         'userPassword': self.encrypt_password(password),
+        #         'displayName': username,
+        #         'mail': email,
+        #         'shadowLastChange': 0,
+        #         'shadowMax': 0,
+        #         'shadowWarning': 0,
+        #     },
+        # )
+
         if not result:
-            print(connection.result)
+            # TODO: Handle errors.
+            pass
 
     def remove_user(self, name: str) -> None:
         pass
@@ -192,6 +226,17 @@ class DirectoryTools:
                 print(commands.show_group(name=self.parsed_arguments.name))
             elif 'list' in self.parsed_arguments:
                 print(commands.list_groups())
+            else:
+                self.parser.print_help()
+        elif 'unit' in self.parsed_arguments:
+            if 'add' in self.parsed_arguments:
+                commands.add_unit(name=self.parsed_arguments.name)
+            elif 'remove' in self.parsed_arguments:
+                commands.remove_unit(name=self.parsed_arguments.name)
+            elif 'show' in self.parsed_arguments:
+                print(commands.show_unit(name=self.parsed_arguments.name))
+            elif 'list' in self.parsed_arguments:
+                print(commands.list_units())
             else:
                 self.parser.print_help()
         elif 'status' in self.parsed_arguments:
