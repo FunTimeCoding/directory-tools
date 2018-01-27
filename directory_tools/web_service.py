@@ -35,8 +35,8 @@ class WebService:
         WebService.token = config.get('token')
         WebService.app.secret_key = config.get('secret_key')
         self.listen_address = config.get('listen_address')
-        web_logger = getLogger('web-service')
-        web_logger.debug('Web service initialized.')
+        # web_logger = getLogger('web-service')
+        # web_logger.debug('Web service initialized.')
 
     @staticmethod
     def main() -> int:
