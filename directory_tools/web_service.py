@@ -54,9 +54,7 @@ class WebService:
     @staticmethod
     @app.route('/')
     def index():
-        return render_template(
-            template_name_or_list='index.html',
-        )
+        return render_template(template_name_or_list='index.html')
 
     @staticmethod
     @app.route('/register', methods=['GET', 'POST'])
@@ -67,11 +65,28 @@ class WebService:
             # user = User(form.username.data, form.email.data,
             #             form.password.data)
             # db_session.add(user)
-            flash('Registration complete.')
+            flash(
+                'Registration complete: ' + form.username.data + ' '
+                + form.email.data + ' ' + form.first_name.data + ' '
+                + form.last_name.data + ' ' + form.password.data + ' '
+                + form.confirm.data + ' ' + form.accept_tos.data
+            )
 
             return redirect(url_for('login'))
 
         return render_template('register.html', form=form)
+
+    @staticmethod
+    @app.route('/recover', methods=['GET', 'POST'])
+    def recover():
+        form = RecoverForm(request.form)
+
+        if request.method == 'POST' and form.validate():
+            flash('Email sent.' + form.email.data + ' ' + form.username.data)
+
+            return redirect(url_for('recover'))
+
+        return render_template(template_name_or_list='recover.html', form=form)
 
     @staticmethod
     @app.route('/login', methods=['GET', 'POST'])
@@ -90,70 +105,80 @@ class WebService:
     @staticmethod
     @app.route('/logout')
     def logout():
-        session.pop('logged_in', None)
-        session.pop('username', None)
+        if 'logged_in' in session:
+            session.pop('logged_in', None)
+            session.pop('username', None)
+            flash('Logged out.')
+        else:
+            flash('Not logged in.')
 
         return redirect(url_for('index'))
 
     @staticmethod
     @app.route('/profile', methods=['GET', 'POST'])
     def profile():
-        form = ProfileForm(request.form)
+        if 'logged_in' in session:
+            form = ProfileForm(request.form)
 
-        if request.method == 'POST' and form.validate():
-            flash(
-                'Profile updated: ' + form.username.data + ' '
-                + form.first_name.data + ' ' + form.last_name.data
+            if request.method == 'POST' and form.validate():
+                flash(
+                    'Profile updated: ' + form.username.data + ' '
+                    + form.first_name.data + ' ' + form.last_name.data
+                )
+
+                return redirect(url_for('profile'))
+
+            return render_template(
+                template_name_or_list='profile.html',
+                form=form,
             )
+        else:
+            flash('Not logged in.')
 
-            return redirect(url_for('profile'))
-
-        return render_template(template_name_or_list='profile.html', form=form)
-
-    @staticmethod
-    @app.route('/recover', methods=['GET', 'POST'])
-    def recover():
-        form = RecoverForm(request.form)
-
-        if request.method == 'POST' and form.validate():
-            flash('Email sent.' + form.email.data + ' ' + form.username.data)
-
-            return redirect(url_for('recover'))
-
-        return render_template(template_name_or_list='recover.html', form=form)
+            return redirect(url_for('login'))
 
     @staticmethod
     @app.route('/change_email', methods=['GET', 'POST'])
     def change_email():
-        form = ChangeEmailForm(request.form)
+        if 'logged_in' in session:
+            form = ChangeEmailForm(request.form)
 
-        if request.method == 'POST' and form.validate():
-            flash('Email sent: ' + form.email.data)
+            if request.method == 'POST' and form.validate():
+                flash('Email sent: ' + form.email.data)
 
-            return redirect(url_for('change_email'))
+                return redirect(url_for('change_email'))
 
-        return render_template(
-            template_name_or_list='change_email.html',
-            form=form,
-        )
+            return render_template(
+                template_name_or_list='change_email.html',
+                form=form,
+            )
+        else:
+            flash('Not logged in.')
+
+            return redirect(url_for('login'))
 
     @staticmethod
     @app.route('/change_password', methods=['GET', 'POST'])
     def change_password():
-        form = ChangePasswordForm(request.form)
+        if 'logged_in' in session:
+            form = ChangePasswordForm(request.form)
 
-        if request.method == 'POST' and form.validate():
-            flash(
-                'Password changed: ' + form.current_password.data + ' '
-                + form.password.data + ' ' + form.confirm.data
+            if request.method == 'POST' and form.validate():
+                flash(
+                    'Password changed: ' + form.current_password.data + ' '
+                    + form.password.data + ' ' + form.confirm.data
+                )
+
+                return redirect(url_for('change_password'))
+
+            return render_template(
+                template_name_or_list='change_password.html',
+                form=form,
             )
+        else:
+            flash('Not logged in.')
 
-            return redirect(url_for('change_password'))
-
-        return render_template(
-            template_name_or_list='change_password.html',
-            form=form,
-        )
+            return redirect(url_for('login'))
 
     @staticmethod
     def authorize():
