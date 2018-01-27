@@ -8,6 +8,7 @@ from ldap3.core.exceptions import LDAPSSLConfigurationError, LDAPStartTLSError
 from ldap3.core.exceptions import LDAPSocketOpenError, LDAPBindError
 from ldap3.core.exceptions import LDAPInvalidFilterError
 from ldap3.utils.log import set_library_log_activation_level, EXTENDED
+from ldap3.utils.log import set_library_log_hide_sensitive_data
 
 
 class Client:
@@ -19,17 +20,19 @@ class Client:
             suffix: str,
             secure: bool = False,
     ) -> None:
-        # logging.basicConfig(
-        #     level=logging.DEBUG,
-        #     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        # )
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        )
         set_library_log_activation_level(EXTENDED)
+        set_library_log_hide_sensitive_data(False)
         self.server_name = server_name
         self.manager_distinguished_name = manager_distinguished_name
         self.manager_password = manager_password
         self.suffix = suffix
         self.secure = secure
         self.connection = None
+        logging.debug('Client initialized.')
 
     def create_server(self) -> Server:
         # PyCharm wants this here to not complain about the return statement.
