@@ -16,10 +16,17 @@ class Commands:
         'home': 'homeDirectory',  # must
         'password': 'userPassword',  # may
     }
+    posix_group = {
+        'name': 'cn',  # must
+        'number': 'gidNumber',  # must
+    }
     internet_organization_person = {
         'first_name': 'givenName',  # may
         'last_name': 'sn',  # may
         'email': 'mail',  # may
+    }
+    organizational_unit = {
+        'name': 'ou',  # must
     }
 
     def __init__(
@@ -145,10 +152,6 @@ class Commands:
         return users
 
     def add_group(self, name: str) -> None:
-        posix_group = {
-            'name': 'cn',  # must
-            'number': 'gidNumber',  # must
-        }
         connection = self.lazy_get_client().lazy_get_connection()
 
         if not connection.add(
@@ -158,8 +161,8 @@ class Commands:
                     'posixGroup',  # super: top
                 ],
                 attributes={
-                    posix_group['name']: name,
-                    posix_group['number']: 2000,
+                    self.posix_group['name']: name,
+                    self.posix_group['number']: 2000,
                 }
         ):
             raise RuntimeError(connection.result['description'])
@@ -171,7 +174,22 @@ class Commands:
             raise RuntimeError(connection.result['description'])
 
     def show_group(self, name: str) -> str:
-        pass
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.search(
+                search_base='ou=groups,' + self.suffix,
+                search_filter='(cn=' + name + ')',
+                attributes=[
+                    self.posix_group['name'],
+                    self.posix_group['number'],
+                ],
+        ):
+            if connection.result['description'] == 'success':
+                return ''
+            else:
+                raise RuntimeError(connection.result['description'])
+
+        return str(connection.response[0]['attributes'])
 
     def list_groups(self) -> list:
         connection = self.lazy_get_client().lazy_get_connection()
@@ -197,7 +215,7 @@ class Commands:
         if not connection.add(
                 dn='ou=' + name + ',' + self.suffix,
                 object_class=['organizationalUnit'],
-                attributes={'ou': name}
+                attributes={self.organizational_unit['name']: name}
         ):
             raise RuntimeError(connection.result['description'])
 
@@ -208,7 +226,21 @@ class Commands:
             raise RuntimeError(connection.result['description'])
 
     def show_unit(self, name: str):
-        pass
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.search(
+                search_base=self.suffix,
+                search_filter='(ou=' + name + ')',
+                attributes=[
+                    self.organizational_unit['name']
+                ],
+        ):
+            if connection.result['description'] == 'success':
+                return ''
+            else:
+                raise RuntimeError(connection.result['description'])
+
+        return str(connection.response[0]['attributes'])
 
     def list_units(self) -> list:
         connection = self.lazy_get_client().lazy_get_connection()
