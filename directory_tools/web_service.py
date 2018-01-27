@@ -91,8 +91,6 @@ class WebService:
                 else:
                     flash('Unexpected error: ' + message)
 
-                return redirect(url_for('register'))
-
         return render_template('register.html', form=form)
 
     @staticmethod
