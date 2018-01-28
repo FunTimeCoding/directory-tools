@@ -309,7 +309,7 @@ class Commands:
                 raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
-            units += [entry['attributes'][self.organizational_unit['name']]]
+            units += [entry['attributes']]
 
         return units
 
