@@ -254,7 +254,7 @@ class Commands:
 
         for entry in connection.response:
             groups[
-                entry['attributes'][self.posix_group['name'][0]]
+                entry['attributes'][self.posix_group['name']][0]
             ] = self.format_group_attributes(entry['attributes'])
 
         return groups
