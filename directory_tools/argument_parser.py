@@ -36,7 +36,6 @@ class Parser:
         add_parent.add_argument('--last-name', required=True)
         add_parent.add_argument('--password', required=True)
         add_parent.add_argument('--email', required=True)
-        add_parent.add_argument('--group', required=True)
         add_parser = user_subparsers.add_parser(
             'add',
             parents=[add_parent],
