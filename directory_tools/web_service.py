@@ -72,14 +72,12 @@ class WebService:
 
         if request.method == 'POST' and form.validate():
             try:
-                WebService.create_commands().add_group(name=form.username.data)
                 WebService.create_commands().add_user(
                     username=form.username.data,
                     first_name=form.first_name.data,
                     last_name=form.last_name.data,
                     password=form.password.data,
                     email=form.email.data,
-                    group=form.username.data,
                 )
                 # TODO: Send confirmation email.
                 flash('Registration complete.')
@@ -229,8 +227,7 @@ class WebService:
                 authorization_type = elements[0]
                 token = elements[1]
 
-        if token != WebService.token \
-                or authorization_type != 'Token':
+        if token != WebService.token or authorization_type != 'Token':
             return 'Authorization failed.'
 
         return ''
@@ -281,7 +278,6 @@ class WebService:
                     email=str(request.json.get('email')),
                     first_name=str(request.json.get('first_name')),
                     last_name=str(request.json.get('last_name')),
-                    group=str(request.json.get('group')),
                     password=str(request.json.get('password')),
                 )
             )

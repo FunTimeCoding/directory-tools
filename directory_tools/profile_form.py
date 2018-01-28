@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, PasswordField
+from wtforms import Form, StringField
 
 
 class ProfileForm(Form):

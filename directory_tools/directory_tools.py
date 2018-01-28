@@ -154,21 +154,13 @@ class Commands:
             first_name: str,
             last_name: str,
             password: str,
-            email: str,
-            group: str
+            email: str
     ) -> None:
         connection = self.lazy_get_client().lazy_get_connection()
-        groups = self.list_groups()
-        group_number = -1
-
-        for name, attributes in groups.items():
-            number = attributes[self.posix_group['number']]
-
-            if name == group:
-                group_number = number
-
-        if group_number is -1:
-            raise RuntimeError('Group not found.')
+        self.add_group(name=username)
+        group = self.show_group(name=username)
+        group_number = group[self.posix_group['number']]
+        group_number += 1
 
         if not connection.add(
                 dn='uid=' + username + ',ou=users,' + self.suffix,
@@ -179,7 +171,6 @@ class Commands:
                     'organizationalPerson',  # super: person
                     'inetOrgPerson',  # super: organizationalPerson
                 ],
-                # TODO: get uid increment
                 attributes={
                     self.posix_account[
                         'full_name'
@@ -462,7 +453,6 @@ class DirectoryTools:
                     last_name=self.parsed_arguments.last_name,
                     password=self.parsed_arguments.password,
                     email=self.parsed_arguments.email,
-                    group=self.parsed_arguments.group,
                 )
             elif 'remove' in self.parsed_arguments:
                 commands.remove_user(name=self.parsed_arguments.name)
