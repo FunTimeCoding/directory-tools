@@ -158,7 +158,7 @@ class Commands:
             email: str
     ) -> None:
         connection = self.lazy_get_client().lazy_get_connection()
-        self.add_group(name=username)
+        self.add_group(group_name=username)
         group = self.show_group(name=username)
         group_number = group[self.posix_group['number']]
 
@@ -464,7 +464,7 @@ class DirectoryTools:
                 self.parser.print_help()
         elif 'group' in self.parsed_arguments:
             if 'add' in self.parsed_arguments:
-                commands.add_group(name=self.parsed_arguments.name)
+                commands.add_group(group_name=self.parsed_arguments.name)
             elif 'remove' in self.parsed_arguments:
                 commands.remove_group(name=self.parsed_arguments.name)
             elif 'show' in self.parsed_arguments:
