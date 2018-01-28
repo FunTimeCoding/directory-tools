@@ -80,6 +80,7 @@ class WebService:
                     email=form.email.data,
                     group='',
                 )
+                # TODO: Send confirmation email.
                 flash('Registration complete.')
 
                 return redirect(url_for('login'))
@@ -99,7 +100,10 @@ class WebService:
         form = RecoverForm(request.form)
 
         if request.method == 'POST' and form.validate():
-            flash('Email sent.' + form.email.data + ' ' + form.username.data)
+            # TODO: look up form.email.data or form.username.data and send
+            # recovery mail.
+            # flash('Email sent.')
+            flash('Not implemented yet.')
 
             return redirect(url_for('recover'))
 
@@ -138,10 +142,16 @@ class WebService:
             form = ProfileForm(request.form)
 
             if request.method == 'POST' and form.validate():
-                flash(
-                    'Profile updated: ' + form.username.data + ' '
-                    + form.first_name.data + ' ' + form.last_name.data
+                # TODO: Allow changing username if not used. Log out afterwards.
+                WebService.create_commands().set_first_name(
+                    username=session['username'],
+                    first_name=form.first_name.data,
                 )
+                WebService.create_commands().set_last_name(
+                    username=session['username'],
+                    last_name=form.last_name.data,
+                )
+                flash('Profile updated.')
 
                 return redirect(url_for('profile'))
 
@@ -165,7 +175,8 @@ class WebService:
                     username=session['username'],
                     email=form.email.data,
                 )
-                # flash('Email sent: ' + form.email.data)
+                # TODO: Send confirmation email to form.email.data.
+                # flash('Email sent.')
                 flash('Email changed.')
 
                 return redirect(url_for('change_email'))
@@ -186,10 +197,12 @@ class WebService:
             form = ChangePasswordForm(request.form)
 
             if request.method == 'POST' and form.validate():
-                flash(
-                    'Password changed: ' + form.current_password.data + ' '
-                    + form.password.data + ' ' + form.confirm.data
+                # TODO: Check form.current_password.data
+                WebService.create_commands().set_password(
+                    username=session['username'],
+                    password=form.password.data,
                 )
+                flash('Password changed.')
 
                 return redirect(url_for('change_password'))
 
