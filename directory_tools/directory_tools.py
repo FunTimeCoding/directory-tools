@@ -65,7 +65,7 @@ class Commands:
             ['slappasswd', '-s', password]
         ).get_standard_output()
 
-    def add_group(self, name: str) -> None:
+    def add_group(self, group_name: str) -> None:
         connection = self.lazy_get_client().lazy_get_connection()
         group_number = -1
 
@@ -82,13 +82,13 @@ class Commands:
         print('New group number: ' + str(group_number))
 
         if not connection.add(
-                dn='cn=' + name + ',ou=groups,' + self.suffix,
+                dn='cn=' + group_name + ',ou=groups,' + self.suffix,
                 object_class=[
                     'top',
                     'posixGroup',  # super: top
                 ],
                 attributes={
-                    self.posix_group['name']: name,
+                    self.posix_group['name']: group_name,
                     self.posix_group['number']: group_number,
                 }
         ):
