@@ -114,11 +114,17 @@ class WebService:
         form = LoginForm(request.form)
 
         if request.method == 'POST' and form.validate():
-            session['logged_in'] = True
-            session['username'] = request.form['username']
-            flash('Login successful.')
-
-            return redirect(url_for('index'))
+            if WebService.create_commands().authenticate(
+                    username=form.username.data,
+                    password=form.password.data,
+            ):
+                session['logged_in'] = True
+                session['username'] = request.form['username']
+                flash('Login successful.')
+                return redirect(url_for('index'))
+            else:
+                flash('Login failed.')
+                return redirect(url_for('login'))
 
         return render_template('login.html', form=form)
 

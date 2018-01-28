@@ -61,6 +61,19 @@ class Client:
             tls=transport_layer_security,
         )
 
+    def authenticate(self, distinguished_name: str, password: str):
+        connection = Connection(
+            self.create_server(),
+            user=distinguished_name,
+            password=password,
+        )
+
+        if not connection.bind():
+            print('Authentication error: ', connection.result)
+            return False
+
+        return True
+
     def create_connection(self) -> Connection:
         server = self.create_server()
         # PyCharm wants this to not complain about the return statement.

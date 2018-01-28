@@ -65,6 +65,12 @@ class Commands:
             ['slappasswd', '-s', password]
         ).get_standard_output()
 
+    def authenticate(self, username: str, password: str):
+        return self.lazy_get_client().authenticate(
+            distinguished_name='uid=' + username + ',ou=users,' + self.suffix,
+            password=password,
+        )
+
     def add_group(self, group_name: str) -> None:
         connection = self.lazy_get_client().lazy_get_connection()
         group_number = -1
