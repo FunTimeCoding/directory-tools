@@ -109,7 +109,32 @@ class Commands:
         if not connection.delete(dn='uid=' + name + ',ou=users,' + self.suffix):
             raise RuntimeError(connection.result['description'])
 
-    def show_user(self, name: str) -> str:
+    def format_user_attributes(self, attributes: dict) -> dict:
+        return {
+            self.posix_account['full_name']: attributes[
+                self.posix_account['full_name']
+            ][0],
+            self.posix_account['user_number']: attributes[
+                self.posix_account['user_number']
+            ],
+            self.posix_account['group_number']: attributes[
+                self.posix_account['group_number']
+            ],
+            self.posix_account['home']: attributes[
+                self.posix_account['home']
+            ],
+            self.internet_organization_person['first_name']: attributes[
+                self.internet_organization_person['first_name']
+            ][0],
+            self.internet_organization_person['last_name']: attributes[
+                self.internet_organization_person['last_name']
+            ][0],
+            self.internet_organization_person['email']: attributes[
+                self.internet_organization_person['email']
+            ][0],
+        }
+
+    def show_user(self, name: str) -> dict:
         connection = self.lazy_get_client().lazy_get_connection()
 
         if not connection.search(
@@ -127,11 +152,11 @@ class Commands:
                 ],
         ):
             if connection.result['description'] == 'success':
-                return ''
+                return {}
             else:
                 raise RuntimeError(connection.result['description'])
 
-        return str(connection.response[0]['attributes'])
+        return self.format_user_attributes(connection.response[0]['attributes'])
 
     def list_users(self) -> dict:
         connection = self.lazy_get_client().lazy_get_connection()
@@ -157,30 +182,9 @@ class Commands:
                 raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
-            attributes = entry['attributes']
-            users[attributes[self.posix_account['username']][0]] = {
-                self.posix_account['full_name']: attributes[
-                    self.posix_account['full_name']
-                ][0],
-                self.posix_account['user_number']: attributes[
-                    self.posix_account['user_number']
-                ],
-                self.posix_account['group_number']: attributes[
-                    self.posix_account['group_number']
-                ],
-                self.posix_account['home']: attributes[
-                    self.posix_account['home']
-                ],
-                self.internet_organization_person['first_name']: attributes[
-                    self.internet_organization_person['first_name']
-                ][0],
-                self.internet_organization_person['last_name']: attributes[
-                    self.internet_organization_person['last_name']
-                ][0],
-                self.internet_organization_person['email']: attributes[
-                    self.internet_organization_person['email']
-                ][0],
-            }
+            users[
+                entry['attributes'][self.posix_account['username']][0]
+            ] = self.format_user_attributes(entry['attributes'])
 
         return users
 
@@ -206,7 +210,12 @@ class Commands:
         if not connection.delete(dn='cn=' + name + ',ou=groups,' + self.suffix):
             raise RuntimeError(connection.result['description'])
 
-    def show_group(self, name: str) -> str:
+    def format_group_attributes(self, attributes: dict) -> dict:
+        return {
+            self.posix_group['name']: attributes[self.posix_group['name'][0]]
+        }
+
+    def show_group(self, name: str) -> dict:
         connection = self.lazy_get_client().lazy_get_connection()
 
         if not connection.search(
@@ -218,11 +227,13 @@ class Commands:
                 ],
         ):
             if connection.result['description'] == 'success':
-                return ''
+                return {}
             else:
                 raise RuntimeError(connection.result['description'])
 
-        return str(connection.response[0]['attributes'])
+        return self.format_group_attributes(
+            connection.response[0]['attributes']
+        )
 
     def list_groups(self) -> dict:
         connection = self.lazy_get_client().lazy_get_connection()
@@ -242,9 +253,9 @@ class Commands:
                 raise RuntimeError(connection.result['description'])
 
         for entry in connection.response:
-            groups[entry[self.posix_group['number']]] = entry[
-                self.posix_group['name']
-            ]
+            groups[
+                entry['attributes'][self.posix_group['name'][0]]
+            ] = self.format_group_attributes(entry['attributes'])
 
         return groups
 
