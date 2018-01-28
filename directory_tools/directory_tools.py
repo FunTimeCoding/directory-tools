@@ -65,6 +65,89 @@ class Commands:
             ['slappasswd', '-s', password]
         ).get_standard_output()
 
+    def add_group(self, name: str) -> None:
+        connection = self.lazy_get_client().lazy_get_connection()
+        group_number = -1
+
+        for name, attributes in self.list_groups().items():
+            number = attributes[self.posix_group['number']]
+
+            if number > group_number:
+                group_number = number
+
+        if group_number is -1:
+            raise RuntimeError('Could not determine group number.')
+
+        group_number += 1
+
+        if not connection.add(
+                dn='cn=' + name + ',ou=groups,' + self.suffix,
+                object_class=[
+                    'top',
+                    'posixGroup',  # super: top
+                ],
+                attributes={
+                    self.posix_group['name']: name,
+                    self.posix_group['number']: group_number,
+                }
+        ):
+            raise RuntimeError(connection.result['description'])
+
+    def remove_group(self, name: str) -> None:
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.delete(dn='cn=' + name + ',ou=groups,' + self.suffix):
+            raise RuntimeError(connection.result['description'])
+
+    def format_group_attributes(self, attributes: dict) -> dict:
+        return {
+            self.posix_group['number']: attributes[self.posix_group['number']]
+        }
+
+    def show_group(self, name: str) -> dict:
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.search(
+                search_base='ou=groups,' + self.suffix,
+                search_filter='(cn=' + name + ')',
+                attributes=[
+                    self.posix_group['name'],
+                    self.posix_group['number'],
+                ],
+        ):
+            if connection.result['description'] == 'success':
+                return {}
+            else:
+                raise RuntimeError(connection.result['description'])
+
+        return self.format_group_attributes(
+            connection.response[0]['attributes']
+        )
+
+    def list_groups(self) -> dict:
+        connection = self.lazy_get_client().lazy_get_connection()
+        groups = {}
+
+        if not connection.search(
+                search_base=self.suffix,
+                search_filter='(objectClass=posixGroup)',
+                attributes=[
+                    self.posix_group['name'],
+                    self.posix_group['number'],
+                ],
+        ):
+            if connection.result['description'] == 'success':
+                return groups
+            else:
+                raise RuntimeError(connection.result['description'])
+
+        for entry in connection.response:
+            groups[
+                entry['attributes'][self.posix_group['name']][0]
+            ] = self.format_group_attributes(entry['attributes'])
+
+        return groups
+
     def add_user(
             self,
             username: str,
@@ -75,6 +158,17 @@ class Commands:
             group: str
     ) -> None:
         connection = self.lazy_get_client().lazy_get_connection()
+        groups = self.list_groups()
+        group_number = -1
+
+        for name, attributes in groups.items():
+            number = attributes[self.posix_group['number']]
+
+            if name == group:
+                group_number = number
+
+        if group_number is -1:
+            raise RuntimeError('Group not found.')
 
         if not connection.add(
                 dn='uid=' + username + ',ou=users,' + self.suffix,
@@ -86,14 +180,13 @@ class Commands:
                     'inetOrgPerson',  # super: organizationalPerson
                 ],
                 # TODO: get uid increment
-                # TODO: get gid
                 attributes={
                     self.posix_account[
                         'full_name'
                     ]: first_name + ' ' + last_name,
                     self.posix_account['username']: username,
-                    self.posix_account['user_number']: 2000,
-                    self.posix_account['group_number']: 2000,
+                    self.posix_account['user_number']: group_number,
+                    self.posix_account['group_number']: group_number,
                     self.posix_account['home']: '/home/' + username,
                     self.posix_account[
                         'password'
@@ -254,77 +347,6 @@ class Commands:
             ] = self.format_user_attributes(entry['attributes'])
 
         return users
-
-    def add_group(self, name: str) -> None:
-        connection = self.lazy_get_client().lazy_get_connection()
-
-        if not connection.add(
-                dn='cn=' + name + ',ou=groups,' + self.suffix,
-                object_class=[
-                    'top',
-                    'posixGroup',  # super: top
-                ],
-                attributes={
-                    self.posix_group['name']: name,
-                    self.posix_group['number']: 2000,
-                }
-        ):
-            raise RuntimeError(connection.result['description'])
-
-    def remove_group(self, name: str) -> None:
-        connection = self.lazy_get_client().lazy_get_connection()
-
-        if not connection.delete(dn='cn=' + name + ',ou=groups,' + self.suffix):
-            raise RuntimeError(connection.result['description'])
-
-    def format_group_attributes(self, attributes: dict) -> dict:
-        return {
-            self.posix_group['number']: attributes[self.posix_group['number']]
-        }
-
-    def show_group(self, name: str) -> dict:
-        connection = self.lazy_get_client().lazy_get_connection()
-
-        if not connection.search(
-                search_base='ou=groups,' + self.suffix,
-                search_filter='(cn=' + name + ')',
-                attributes=[
-                    self.posix_group['name'],
-                    self.posix_group['number'],
-                ],
-        ):
-            if connection.result['description'] == 'success':
-                return {}
-            else:
-                raise RuntimeError(connection.result['description'])
-
-        return self.format_group_attributes(
-            connection.response[0]['attributes']
-        )
-
-    def list_groups(self) -> dict:
-        connection = self.lazy_get_client().lazy_get_connection()
-        groups = {}
-
-        if not connection.search(
-                search_base=self.suffix,
-                search_filter='(objectClass=posixGroup)',
-                attributes=[
-                    self.posix_group['name'],
-                    self.posix_group['number'],
-                ],
-        ):
-            if connection.result['description'] == 'success':
-                return groups
-            else:
-                raise RuntimeError(connection.result['description'])
-
-        for entry in connection.response:
-            groups[
-                entry['attributes'][self.posix_group['name']][0]
-            ] = self.format_group_attributes(entry['attributes'])
-
-        return groups
 
     def add_unit(self, name: str):
         connection = self.lazy_get_client().lazy_get_connection()
