@@ -160,7 +160,6 @@ class Commands:
         self.add_group(name=username)
         group = self.show_group(name=username)
         group_number = group[self.posix_group['number']]
-        group_number += 1
 
         if not connection.add(
                 dn='uid=' + username + ',ou=users,' + self.suffix,
