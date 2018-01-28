@@ -260,6 +260,8 @@ class Commands:
         if not connection.delete(dn='uid=' + name + ',ou=users,' + self.suffix):
             raise RuntimeError(connection.result['description'])
 
+        self.remove_group(name)
+
     def format_user_attributes(self, attributes: dict) -> dict:
         return {
             self.posix_account['full_name']: attributes[
