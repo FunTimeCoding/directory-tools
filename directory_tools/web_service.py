@@ -162,7 +162,7 @@ class WebService:
 
             if request.method == 'POST' and form.validate():
                 WebService.create_commands().set_email(
-                    username=session.username,
+                    username=session['username'],
                     email=form.email.data,
                 )
                 # flash('Email sent: ' + form.email.data)
