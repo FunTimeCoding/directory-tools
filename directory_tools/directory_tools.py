@@ -212,7 +212,7 @@ class Commands:
 
     def format_group_attributes(self, attributes: dict) -> dict:
         return {
-            self.posix_group['name']: attributes[self.posix_group['name'][0]]
+            self.posix_group['name']: attributes[self.posix_group['name']][0]
         }
 
     def show_group(self, name: str) -> dict:
