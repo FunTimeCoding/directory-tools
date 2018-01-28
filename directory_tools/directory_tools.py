@@ -1,3 +1,5 @@
+from ldap3 import MODIFY_REPLACE
+
 from directory_tools.command_process import CommandProcess
 from directory_tools.yaml_config import YamlConfig
 from yaml import dump
@@ -99,6 +101,71 @@ class Commands:
                     self.internet_organization_person['first_name']: first_name,
                     self.internet_organization_person['last_name']: last_name,
                     self.internet_organization_person['email']: email,
+                },
+        ):
+            raise RuntimeError(connection.result['description'])
+
+    def set_password(self, username: str, password: str):
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.modify(
+                dn='uid=' + username + ',ou=users,' + self.suffix,
+                changes={
+                    self.posix_account['password']: [
+                        (MODIFY_REPLACE, self.encrypt_password(password))
+                    ],
+                },
+        ):
+            raise RuntimeError(connection.result['description'])
+
+    def set_email(self, username: str, email: str):
+        connection = self.lazy_get_client().lazy_get_connection()
+
+        if not connection.modify(
+                dn='uid=' + username + ',ou=users,' + self.suffix,
+                changes={
+                    self.internet_organization_person['email']: [
+                        (MODIFY_REPLACE, email)
+                    ],
+                },
+        ):
+            raise RuntimeError(connection.result['description'])
+
+    def set_first_name(self, username: str, first_name: str):
+        connection = self.lazy_get_client().lazy_get_connection()
+        user = self.show_user(username)
+
+        if not connection.modify(
+                dn='uid=' + username + ',ou=users,' + self.suffix,
+                changes={
+                    self.internet_organization_person['first_name']: [
+                        (MODIFY_REPLACE, first_name)
+                    ],
+                    self.posix_account['full_name']: [
+                        (MODIFY_REPLACE, first_name + ' ' + user[
+                            self.internet_organization_person['last_name']
+                        ])
+                    ],
+                },
+        ):
+            raise RuntimeError(connection.result['description'])
+
+    def set_last_name(self, username: str, last_name: str):
+        connection = self.lazy_get_client().lazy_get_connection()
+        user = self.show_user(username)
+
+        if not connection.modify(
+                dn='uid=' + username + ',ou=users,' + self.suffix,
+                changes={
+                    self.internet_organization_person['first_name']: [
+                        (MODIFY_REPLACE, last_name)
+                    ],
+                    self.posix_account['full_name']: [
+                        (MODIFY_REPLACE, user[
+                                             self.internet_organization_person[
+                                                 'first_name']
+                                         ] + ' ' + last_name)
+                    ],
                 },
         ):
             raise RuntimeError(connection.result['description'])

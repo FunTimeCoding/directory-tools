@@ -161,7 +161,12 @@ class WebService:
             form = ChangeEmailForm(request.form)
 
             if request.method == 'POST' and form.validate():
-                flash('Email sent: ' + form.email.data)
+                WebService.create_commands().set_email(
+                    username=session.username,
+                    email=form.email.data,
+                )
+                # flash('Email sent: ' + form.email.data)
+                flash('Email changed.')
 
                 return redirect(url_for('change_email'))
 
