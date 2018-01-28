@@ -79,6 +79,7 @@ class Commands:
             raise RuntimeError('Could not determine group number.')
 
         group_number += 1
+        print('New group number: ' + group_number)
 
         if not connection.add(
                 dn='cn=' + name + ',ou=groups,' + self.suffix,
