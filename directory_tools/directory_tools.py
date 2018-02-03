@@ -1,3 +1,5 @@
+from getpass import getpass
+
 from ldap3 import MODIFY_REPLACE
 
 from directory_tools.command_process import CommandProcess
@@ -451,6 +453,7 @@ class DirectoryTools:
             manager_password=self.manager_password,
             secure=self.secure,
         )
+        exit_code = 0
 
         if 'user' in self.parsed_arguments:
             if 'add' in self.parsed_arguments:
@@ -494,11 +497,17 @@ class DirectoryTools:
         elif 'status' in self.parsed_arguments:
             commands.status()
         elif 'authenticate' in self.parsed_arguments:
-            commands.authenticate(
+            if self.parsed_arguments.password == '':
+                password = getpass('Password: ')
+            else:
+                password = self.parsed_arguments.password
+
+            if not commands.authenticate(
                 username=self.parsed_arguments.name,
-                password=self.parsed_arguments.password,
-            )
+                password=password,
+            ):
+                exit_code = 1
         else:
             self.parser.print_help()
 
-        return 0
+        return exit_code

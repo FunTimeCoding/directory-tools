@@ -173,4 +173,4 @@ class Parser:
         )
         authenticate_parser.add_argument('authenticate', action='store_true')
         authenticate_parser.add_argument('--name', required=True)
-        authenticate_parser.add_argument('--password', required=True)
+        authenticate_parser.add_argument('--password', default='')
