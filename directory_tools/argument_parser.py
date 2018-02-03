@@ -14,6 +14,7 @@ class Parser:
         self.add_group_child_parser(subparsers)
         self.add_unit_child_parser(subparsers)
         self.add_status_child_parser(subparsers)
+        self.add_authenticate_child_parser(subparsers)
         self.parsed_arguments = self.parser.parse_args(arguments)
 
     def print_help(self) -> None:
@@ -161,3 +162,15 @@ class Parser:
             help='show status information'
         )
         status_parser.add_argument('status', action='store_true')
+
+    @staticmethod
+    def add_authenticate_child_parser(subparsers) -> None:
+        authenticate_parent = CustomArgumentParser(add_help=False)
+        authenticate_parser = subparsers.add_parser(
+            'authenticate',
+            parents=[authenticate_parent],
+            help='authenticate a user'
+        )
+        authenticate_parser.add_argument('authenticate', action='store_true')
+        authenticate_parser.add_argument('--name', required=True)
+        authenticate_parser.add_argument('--password', required=True)

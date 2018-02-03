@@ -493,6 +493,11 @@ class DirectoryTools:
                 self.parser.print_help()
         elif 'status' in self.parsed_arguments:
             commands.status()
+        elif 'authenticate' in self.parsed_arguments:
+            commands.authenticate(
+                username=self.parsed_arguments.name,
+                password=self.parsed_arguments.password,
+            )
         else:
             self.parser.print_help()
 
