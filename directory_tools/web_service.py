@@ -5,6 +5,7 @@ from flask import redirect
 from directory_tools.change_email_form import ChangeEmailForm
 from directory_tools.change_password_form import ChangePasswordForm
 from directory_tools.directory_tools import Commands
+from directory_tools.email_sender import EmailSender
 from directory_tools.login_form import LoginForm
 from directory_tools.profile_form import ProfileForm
 from directory_tools.recover_form import RecoverForm
@@ -20,6 +21,7 @@ class WebService:
     top_level = ''
     manager_name = ''
     manager_password = ''
+    email_sender = None
 
     def __init__(self) -> None:
         basicConfig(
@@ -34,6 +36,10 @@ class WebService:
         WebService.manager_password = config.get('manager-password')
         WebService.token = config.get('token')
         WebService.app.secret_key = config.get('secret_key')
+        WebService.email_sender = EmailSender(
+            server=config.get('email_server'),
+            sender=config.get('email_sender'),
+        )
         self.listen_address = config.get('listen_address')
 
     @staticmethod
@@ -80,6 +86,11 @@ class WebService:
                     email=form.email.data,
                 )
                 # TODO: Send confirmation email.
+                WebService.email_sender.send(
+                    subject='Registration',
+                    recipient=form.email.data,
+                    body='Registration complete.'
+                )
                 flash('Registration complete.')
 
                 return redirect(url_for('login'))
