@@ -4,10 +4,10 @@ from smtplib import SMTP, SMTPRecipientsRefused
 from email.message import EmailMessage
 
 message = EmailMessage()
-message.set_content('content')
-message['Subject'] = 'subject'
-message['From'] = 'example@example.org'
-message['To'] = 'funtimecoding@gmail.com'
+message.set_content('This is a sample message.')
+message['Subject'] = 'Sample message'
+message['From'] = 'funtimecoding@gmail.com'
+message['To'] = 'shiinto@me.com'
 transport = SMTP('m2')
 
 try:
