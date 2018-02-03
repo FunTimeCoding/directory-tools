@@ -9,5 +9,9 @@ message['Subject'] = 'subject'
 message['From'] = 'example@example.org'
 message['To'] = 'funtimecoding@gmail.com'
 transport = SMTP('localhost')
-transport.send_message(message)
-transport.quit()
+
+try:
+    transport.send_message(message)
+    transport.quit()
+except ConnectionRefusedError as exception:
+    print('Error: ' + str(exception))
