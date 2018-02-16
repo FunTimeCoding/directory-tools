@@ -1,6 +1,6 @@
 from logging import basicConfig, INFO
-from flask import Flask, request, json, render_template, flash, url_for, session
-from flask import redirect
+from flask import Flask, request, json, render_template, flash, url_for
+from flask import session, redirect
 
 from directory_tools.change_email_form import ChangeEmailForm
 from directory_tools.change_password_form import ChangePasswordForm
