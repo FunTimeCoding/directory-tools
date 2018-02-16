@@ -104,7 +104,9 @@ class Commands:
     def remove_group(self, name: str) -> None:
         connection = self.lazy_get_client().lazy_get_connection()
 
-        if not connection.delete(dn='cn=' + name + ',ou=groups,' + self.suffix):
+        if not connection.delete(
+                dn='cn=' + name + ',ou=groups,' + self.suffix
+        ):
             raise RuntimeError(connection.result['description'])
 
     def format_group_attributes(self, attributes: dict) -> dict:
@@ -189,7 +191,9 @@ class Commands:
                     self.posix_account[
                         'password'
                     ]: self.encrypt_password(password),
-                    self.internet_organization_person['first_name']: first_name,
+                    self.internet_organization_person[
+                        'first_name'
+                    ]: first_name,
                     self.internet_organization_person['last_name']: last_name,
                     self.internet_organization_person['email']: email,
                 },
@@ -264,7 +268,9 @@ class Commands:
     def remove_user(self, name: str) -> None:
         connection = self.lazy_get_client().lazy_get_connection()
 
-        if not connection.delete(dn='uid=' + name + ',ou=users,' + self.suffix):
+        if not connection.delete(
+                dn='uid=' + name + ',ou=users,' + self.suffix
+        ):
             raise RuntimeError(connection.result['description'])
 
         self.remove_group(name)
@@ -316,7 +322,9 @@ class Commands:
             else:
                 raise RuntimeError(connection.result['description'])
 
-        return self.format_user_attributes(connection.response[0]['attributes'])
+        return self.format_user_attributes(
+            attributes=connection.response[0]['attributes'],
+        )
 
     def list_users(self) -> dict:
         connection = self.lazy_get_client().lazy_get_connection()

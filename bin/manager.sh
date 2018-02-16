@@ -33,7 +33,7 @@ olcRootPW: ${ENCRYPTED_PASSWORD}" | ${MODIFY_SOCKET}
     echo "dn: cn=admin,${SUFFIX}
 changeType: modify
 replace: userPassword
-userPassword: ${ENCRYPTED_PASSWORD}" | ${MODIFY_MANAGER_PASSWORD} -w ${NEW_PASSWORD}
+userPassword: ${ENCRYPTED_PASSWORD}" | ${MODIFY_MANAGER_PASSWORD} -w "${NEW_PASSWORD}"
 else
     usage
 

@@ -158,7 +158,8 @@ class WebService:
             form = ProfileForm(request.form)
 
             if request.method == 'POST' and form.validate():
-                # TODO: Allow changing username if not used. Log out afterwards.
+                # TODO: Allow changing username if not used.
+                # Log out afterwards.
                 WebService.create_commands().set_first_name(
                     username=session['username'],
                     first_name=form.first_name.data,
@@ -266,7 +267,9 @@ class WebService:
             else:
                 return json.dumps(commands.show_group(name=name))
         elif request.method == 'POST':
-            return json.dumps(commands.add_group(str(request.json.get('name'))))
+            return json.dumps(
+                commands.add_group(str(request.json.get('name')))
+            )
         elif request.method == 'DELETE':
             return json.dumps(commands.remove_group(name))
         else:
