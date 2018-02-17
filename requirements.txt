@@ -9,6 +9,3 @@ ldap3
 shyaml
 flask
 flask-wtf # form extension
-
-# helper classes
-git+https://git@github.com/FunTimeCoding/python-utility.git#egg=python-utility
