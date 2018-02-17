@@ -28,7 +28,7 @@ setup(
     ],
     keywords='slapd openldap abstraction command line web service',
     packages=['directory_tools'],
-    install_requires=['pyyaml', 'flask'],
+    install_requires=['pyyaml', 'flask', 'ldap3'],
     python_requires='>=3.2',
     entry_points={
         'console_scripts': [
