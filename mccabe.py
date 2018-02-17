@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from python_utility.command_process import CommandProcess
+from directory_tools.command_process import CommandProcess
 
 
-def main():
+def msain():
     process = CommandProcess([
         'flake8',
         '--exclude', '.venv,.git,.idea,.tox',
