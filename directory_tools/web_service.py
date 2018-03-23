@@ -105,6 +105,11 @@ class WebService:
         return render_template('register.html', form=form)
 
     @staticmethod
+    @app.route('/confirm', methods=['GET'])
+    def confirm():
+        return render_template('confirm.html')
+
+    @staticmethod
     @app.route('/recover', methods=['GET', 'POST'])
     def recover():
         form = RecoverForm(request.form)
