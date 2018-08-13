@@ -179,6 +179,7 @@ class Commands:
                     'person',  # super: top
                     'organizationalPerson',  # super: person
                     'inetOrgPerson',  # super: organizationalPerson
+                    'shadowAccount',  # super: top
                 ],
                 attributes={
                     self.posix_account[
