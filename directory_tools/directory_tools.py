@@ -460,7 +460,7 @@ class DirectoryTools:
             return self.run()
         except Exception as error:
             capture_exception(error)
-            raise error
+            print(str(error))
 
     def run(self) -> int:
         commands = Commands(
