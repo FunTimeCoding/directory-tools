@@ -11,6 +11,10 @@ from ldap3.utils.log import set_library_log_activation_level, EXTENDED
 from ldap3.utils.log import set_library_log_detail_level
 
 
+class AuthenticationError(RuntimeError):
+    pass
+
+
 class Client:
     def __init__(
             self,
@@ -69,10 +73,9 @@ class Client:
         )
 
         if not connection.bind():
-            print('Authentication error: ', connection.result)
-            return False
-
-        return True
+            raise AuthenticationError(
+                'Authentication failed: ', connection.result
+            )
 
     def create_connection(self) -> Connection:
         server = self.create_server()

@@ -68,8 +68,8 @@ class Commands:
             ['slappasswd', '-s', password]
         ).get_standard_output()
 
-    def authenticate(self, username: str, password: str):
-        return self.lazy_get_client().authenticate(
+    def authenticate(self, username: str, password: str) -> None:
+        self.lazy_get_client().authenticate(
             distinguished_name='uid=' + username + ',ou=users,' + self.suffix,
             password=password,
         )
@@ -519,11 +519,10 @@ class DirectoryTools:
             else:
                 password = self.parsed_arguments.password
 
-            if not commands.authenticate(
-                    username=self.parsed_arguments.name,
-                    password=password,
-            ):
-                exit_code = 1
+            commands.authenticate(
+                username=self.parsed_arguments.name,
+                password=password,
+            )
         else:
             self.parser.print_help()
 

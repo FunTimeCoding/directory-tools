@@ -5,6 +5,7 @@ from sentry_sdk import init as initialize_sentry, capture_exception
 
 from directory_tools.change_email_form import ChangeEmailForm
 from directory_tools.change_password_form import ChangePasswordForm
+from directory_tools.client import AuthenticationError
 from directory_tools.directory_tools import Commands
 from directory_tools.email_sender import EmailSender
 from directory_tools.login_form import LoginForm
@@ -133,16 +134,20 @@ class WebService:
         form = LoginForm(request.form)
 
         if request.method == 'POST' and form.validate():
-            if WebService.create_commands().authenticate(
+            try:
+                WebService.create_commands().authenticate(
                     username=form.username.data,
                     password=form.password.data,
-            ):
+                )
                 session['logged_in'] = True
                 session['username'] = request.form['username']
                 flash('Login successful.')
+
                 return redirect(url_for('index'))
-            else:
+            except AuthenticationError as error:
+                capture_exception(error)
                 flash('Login failed.')
+
                 return redirect(url_for('login'))
 
         return render_template('login.html', form=form)
