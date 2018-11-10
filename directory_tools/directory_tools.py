@@ -453,13 +453,14 @@ class DirectoryTools:
 
     @staticmethod
     def main() -> int:
-        return DirectoryTools(argv[1:]).run_exception_wrapper()
+        return DirectoryTools(argv[1:]).run_and_capture_exceptions()
 
-    def run_exception_wrapper(self):
+    def run_and_capture_exceptions(self):
         try:
             return self.run()
         except Exception as error:
             capture_exception(error)
+            raise error
 
     def run(self) -> int:
         commands = Commands(
