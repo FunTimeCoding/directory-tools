@@ -1,6 +1,7 @@
 from logging import basicConfig, INFO
 from flask import Flask, request, json, render_template, flash, url_for
 from flask import session, redirect
+from sentry_sdk import init as initialize_sentry, capture_exception
 
 from directory_tools.change_email_form import ChangeEmailForm
 from directory_tools.change_password_form import ChangePasswordForm
@@ -40,6 +41,7 @@ class WebService:
             server=config.get('email_server'),
             sender=config.get('email_sender'),
         )
+        initialize_sentry(config.get('sentry_locator'))
         self.listen_address = config.get('listen_address')
 
     @staticmethod
@@ -95,6 +97,7 @@ class WebService:
 
                 return redirect(url_for('login'))
             except RuntimeError as error:
+                capture_exception(error)
                 message = str(error)
 
                 if message == 'entryAlreadyExists':
