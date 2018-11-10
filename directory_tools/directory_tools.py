@@ -455,12 +455,14 @@ class DirectoryTools:
     def main() -> int:
         return DirectoryTools(argv[1:]).run_and_capture_exceptions()
 
-    def run_and_capture_exceptions(self):
+    def run_and_capture_exceptions(self) -> int:
         try:
             return self.run()
         except Exception as error:
             capture_exception(error)
             print(str(error))
+
+            return 1
 
     def run(self) -> int:
         commands = Commands(
