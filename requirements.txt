@@ -9,4 +9,4 @@ ldap3
 shyaml
 flask
 flask-wtf # form extension
-sentry-sdk == 0.5.1 # monitoring service
+sentry-sdk == 0.5.3 # monitoring service

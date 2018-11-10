@@ -1,5 +1,6 @@
 from getpass import getpass
 
+from sentry_sdk import init as initialize_sentry, capture_exception
 from ldap3 import MODIFY_REPLACE
 
 from directory_tools.command_process import CommandProcess
@@ -448,10 +449,17 @@ class DirectoryTools:
         self.manager_name = config.get('manager-name')
         self.manager_password = config.get('manager-password')
         self.secure = config.get('secure')
+        initialize_sentry(config.get('sentry_locator'))
 
     @staticmethod
     def main() -> int:
-        return DirectoryTools(argv[1:]).run()
+        return DirectoryTools(argv[1:]).run_exception_wrapper()
+
+    def run_exception_wrapper(self):
+        try:
+            return self.run()
+        except Exception as error:
+            capture_exception(error)
 
     def run(self) -> int:
         commands = Commands(
@@ -512,8 +520,8 @@ class DirectoryTools:
                 password = self.parsed_arguments.password
 
             if not commands.authenticate(
-                username=self.parsed_arguments.name,
-                password=password,
+                    username=self.parsed_arguments.name,
+                    password=password,
             ):
                 exit_code = 1
         else:
