@@ -55,7 +55,20 @@ Vagrant.configure('2') do |c|
     a.extra_vars = {
       'slapd': {
         'enabled': true,
-        'manager_password': 'example'
+        'manager_password': 'admin'
+      },
+      'directory_tools': {
+        'enabled': true,
+        'host': hostname,
+        'domain': 'example',
+        'top_level': 'org',
+        'manager_name': 'admin',
+        'manager_password': 'admin',
+        'secure': false,
+        'secret_key': 'example',
+        'email_server': 'localhost',
+        'email_sender': 'directory-tools@' + domain,
+        'sentry_locator': 'https://directory-tools@localhost/directory-tools'
       }
     }
     # Allow remote_user: root.

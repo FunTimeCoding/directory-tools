@@ -3,3 +3,4 @@
   - vagrant-root-user
   - vagrant-user
   - slapd
+  #- directory-tools
