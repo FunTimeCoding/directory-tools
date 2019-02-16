@@ -51,6 +51,12 @@ Vagrant.configure('2') do |c|
   c.vm.provision :ansible do |a|
     a.playbook = 'playbook.yaml'
     a.compatibility_mode = '2.0'
+    a.extra_vars = {
+      'slapd': {
+        'enabled': true,
+        'manager_password': 'example'
+      }
+    }
     # Allow remote_user: root.
     a.force_remote_user = false
     # Uncomment for more verbosity.
