@@ -7,3 +7,6 @@
 [submodule "roles/vagrant-user"]
 	path = roles/vagrant-user
 	url = ssh://git@vc.shiin.org:2222/devops/ansible-vagrant-user.git
+[submodule "roles/directory-tools"]
+	path = roles/directory-tools
+	url = ssh://git@vc.shiin.org:2222/devops/ansible-directory-tools.git
