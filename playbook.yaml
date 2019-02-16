@@ -1,3 +1,5 @@
 - hosts: all
   roles:
-  - dummy
+  - vagrant-root-user
+  - vagrant-user
+  - slapd
