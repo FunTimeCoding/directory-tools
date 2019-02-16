@@ -68,7 +68,9 @@ Vagrant.configure('2') do |c|
         'secret_key': 'example',
         'email_server': 'localhost',
         'email_sender': 'directory-tools@' + domain,
-        'sentry_locator': 'https://directory-tools@localhost/directory-tools'
+        'sentry_locator': 'https://directory-tools@localhost/directory-tools',
+        'port': 5000,
+        'user': 'vagrant'
       }
     }
     # Allow remote_user: root.
