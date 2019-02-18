@@ -18,16 +18,8 @@ initializeLog(
     level=INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 )
-
 configuration = Configuration('~/.directory-tools.yaml')
 frontend = Blueprint('frontend', __name__, template_folder='templates')
-
-
-@frontend.route('/')
-def index():
-    return render_template(template_name_or_list='index.html')
-
-
 host = configuration.get('host')
 domain = configuration.get('domain')
 top_level = configuration.get('top_level')
@@ -42,14 +34,9 @@ initialize_sentry(configuration.get('sentry_locator'))
 listen_address = configuration.get('listen_address')
 
 
-def create_commands() -> Commands:
-    return Commands(
-        domain=domain,
-        top_level=top_level,
-        host=host,
-        manager_name=manager_name,
-        manager_password=manager_password,
-    )
+@frontend.route('/')
+def index():
+    return render_template(template_name_or_list='index.html')
 
 
 @frontend.route('/')
@@ -244,3 +231,13 @@ def authorize():
         return 'Authorization failed.'
 
     return ''
+
+
+def create_commands() -> Commands:
+    return Commands(
+        domain=domain,
+        top_level=top_level,
+        host=host,
+        manager_name=manager_name,
+        manager_password=manager_password,
+    )

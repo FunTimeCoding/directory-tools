@@ -7,7 +7,8 @@ pytest-cov # pytest coverage plugin
 mccabe # static analysis
 pyyaml # YAML parser
 ldap3
-shyaml
 flask
 flask-wtf # form extension
 sentry-sdk == 0.7.2 # monitoring service
+waitress # WSGI server
+shyaml # YAML parser for shell scripts
