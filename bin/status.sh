@@ -6,7 +6,7 @@ SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 . "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
 
 echo "# Service status"
-sudo service slapd status
+sudo systemctl status --no-pager slapd
 echo
 
 echo "# Network status"
