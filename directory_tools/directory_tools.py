@@ -4,7 +4,7 @@ from sentry_sdk import init as initialize_sentry, capture_exception
 from ldap3 import MODIFY_REPLACE
 
 from directory_tools.command_process import CommandProcess
-from directory_tools.yaml_config import YamlConfig
+from directory_tools.configuration import Configuration
 from yaml import dump
 from sys import argv
 
@@ -442,7 +442,7 @@ class DirectoryTools:
     def __init__(self, arguments: list):
         self.parser = Parser(arguments)
         self.parsed_arguments = self.parser.parsed_arguments
-        config = YamlConfig('~/.directory-tools.yaml')
+        config = Configuration('~/.directory-tools.yaml')
         self.host = config.get('host')
         self.domain = config.get('domain')
         self.top_level = config.get('top_level')

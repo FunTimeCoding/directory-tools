@@ -3,7 +3,7 @@
 from directory_tools.command_process import CommandProcess
 
 
-def msain():
+def main():
     process = CommandProcess([
         'flake8',
         '--exclude', '.venv,.git,.idea,.tox',

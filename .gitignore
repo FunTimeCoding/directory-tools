@@ -1,11 +1,19 @@
 build
 tmp
 .vagrant
+debian/files
+debian/debhelper-build-stamp
+debian/directory-tools
+debian/directory-tools.substvars
+documentation/man/*.1
+.scannerwork
 
 # Python
+dist
 .coverage
 .cache
 .venv
 .tox
 *.egg-info
 *.pyc
+.pytest_cache

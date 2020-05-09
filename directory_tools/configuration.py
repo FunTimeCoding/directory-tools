@@ -3,7 +3,7 @@ from os.path import expanduser, isfile
 from yaml import load_all, dump
 
 
-class YamlConfig:
+class Configuration:
     def __init__(self, path: str = ''):
         self.settings = {}
         self.path = expanduser(path)
