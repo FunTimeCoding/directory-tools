@@ -4,7 +4,10 @@ echo "This script is incomplete."
 exit 1
 
 DIRECTORY=$(dirname "${0}")
-SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
+SCRIPT_DIRECTORY=$(
+    cd "${DIRECTORY}" || exit 1
+    pwd
+)
 # shellcheck source=/dev/null
 . "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
 DATABASE_DIRECTORY="/var/lib/ldap/${DOMAIN}.${TOP_LEVEL}"
@@ -35,7 +38,7 @@ olcDbIndex: uid eq" | ${MODIFY_SOCKET}
 
 echo "dn: ${SUFFIX}
 objectClass: dcObject
-objectclass: organization
+objectClass: organization
 o: ${ORGANIZATION}
 dc: ${DOMAIN}
 description: ${ORGANIZATION} Organization" | ${ADD_MANAGER}
