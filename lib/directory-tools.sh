@@ -2,45 +2,45 @@
 
 while true; do
     case ${1} in
-        --help)
-            echo "Global usage: ${0} [--help][--config CONFIG]"
+    --help)
+        echo "Global usage: ${0} [--help][--config CONFIG]"
 
-            if command -v usage > /dev/null; then
-                usage
-            fi
+        if command -v usage >/dev/null; then
+            usage
+        fi
 
-            exit 0
-            ;;
-        --config)
-            CONFIG=${2-}
-            shift 2
-            ;;
-        *)
-            break
-            ;;
+        exit 0
+        ;;
+    --config)
+        CONFIG=${2-}
+        shift 2
+        ;;
+    *)
+        break
+        ;;
     esac
 done
 
 OPTIND=1
 
-if [ "${CONFIG}" = "" ]; then
+if [ "${CONFIG}" = '' ]; then
     CONFIG="${HOME}/.directory-tools.yml"
 fi
 
 if [ -f "${CONFIG}" ]; then
-    DOMAIN=$(shyaml get-value "domain" < "${CONFIG}" 2>/dev/null || true)
+    DOMAIN=$(shyaml get-value "domain" <"${CONFIG}" 2>/dev/null || true)
     export DOMAIN
-    TOP_LEVEL=$(shyaml get-value "top_level" < "${CONFIG}" 2>/dev/null || true)
+    TOP_LEVEL=$(shyaml get-value "top_level" <"${CONFIG}" 2>/dev/null || true)
     export TOP_LEVEL
-    MANAGER_PASSWORD=$(shyaml get-value "manager-password" < "${CONFIG}" 2>/dev/null || true)
+    MANAGER_PASSWORD=$(shyaml get-value "manager-password" <"${CONFIG}" 2>/dev/null || true)
     export MANAGER_PASSWORD
 
-    if [ ! "$(command -v slappasswd || true)" = "" ]; then
+    if [ ! "$(command -v slappasswd || true)" = '' ]; then
         ENCRYPTED_MANAGER_PASSWORD=$(slappasswd -s "${MANAGER_PASSWORD}")
         export ENCRYPTED_MANAGER_PASSWORD
     fi
 else
-    CONFIG=""
+    CONFIG=''
 fi
 
 SUFFIX="dc=${DOMAIN},dc=${TOP_LEVEL}"
