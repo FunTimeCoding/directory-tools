@@ -9,9 +9,9 @@ class WebService:
     app = Flask(__name__)
 
     def __init__(self):
-        configuration = Configuration('~/.eve-trading.yaml')
+        configuration = Configuration('~/.directory-tools.yaml')
         self.port = configuration.get('port')
-        self.app.config.from_pyfile(expanduser('~/.eve-trading.py'))
+        self.app.config.from_pyfile(expanduser('~/.directory-tools.py'))
 
         from directory_tools.frontend import frontend
         self.app.register_blueprint(frontend)
