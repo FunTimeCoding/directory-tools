@@ -1,6 +1,6 @@
 from argparse import ArgumentDefaultsHelpFormatter
 
-from directory_tools.custom_argument_parser import CustomArgumentParser
+from python_utility.custom_argument_parser import CustomArgumentParser
 
 
 class Parser:

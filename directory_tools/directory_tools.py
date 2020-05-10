@@ -3,8 +3,8 @@ from getpass import getpass
 from sentry_sdk import init as initialize_sentry, capture_exception
 from ldap3 import MODIFY_REPLACE
 
-from directory_tools.command_process import CommandProcess
-from directory_tools.configuration import Configuration
+from python_utility.command_process import CommandProcess
+from python_utility.configuration import Configuration
 from yaml import dump
 from sys import argv
 
@@ -448,7 +448,7 @@ class DirectoryTools:
         self.top_level = config.get('top_level')
         self.manager_name = config.get('manager-name')
         self.manager_password = config.get('manager-password')
-        self.secure = config.get('secure')
+        self.secure = bool(config.get('secure'))
         initialize_sentry(config.get('sentry_locator'))
 
     @staticmethod
