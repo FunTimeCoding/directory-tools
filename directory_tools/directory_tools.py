@@ -85,9 +85,9 @@ class Commands:
                 group_number = number
 
         if group_number is -1:
-            raise RuntimeError('Could not determine group number.')
-
-        group_number += 1
+            group_number = 2000
+        else:
+            group_number += 1
 
         if not connection.add(
                 dn='cn=' + group_name + ',ou=groups,' + self.suffix,

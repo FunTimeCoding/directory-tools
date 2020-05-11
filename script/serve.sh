@@ -6,7 +6,7 @@ SCRIPT_DIRECTORY=$(
     pwd
 )
 # shellcheck source=/dev/null
-. "${SCRIPT_DIRECTORY}/../lib/project.sh"
+. "${SCRIPT_DIRECTORY}/../configuration/project.sh"
 
 if [ "${SYSTEM}" = Darwin ]; then
     SED='gsed'
@@ -14,8 +14,7 @@ else
     SED='sed'
 fi
 
-UNDERSCORE=$(echo "${PROJECT_NAME}" | ${SED} --regexp-extended 's/-/_/g')
 # shellcheck source=/dev/null
 . "${HOME}/venv/bin/activate"
-PORT=$(shyaml get-value port <"${HOME}/.${PROJECT_NAME}.yaml")
-waitress-serve --port "${PORT}" --call "${UNDERSCORE}.application:create_app"
+PORT=$(shyaml get-value port <"${HOME}/.${PROJECT_NAME_DASH}.yaml")
+waitress-serve --port "${PORT}" --call "${PROJECT_NAME_UNDERSCORE}.application:create_app"

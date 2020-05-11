@@ -6,7 +6,7 @@ SCRIPT_DIRECTORY=$(
     pwd
 )
 # shellcheck source=/dev/null
-. "${SCRIPT_DIRECTORY}/../lib/project.sh"
+. "${SCRIPT_DIRECTORY}/../configuration/project.sh"
 ARCHIVE="${PROJECT_NAME}_${PROJECT_VERSION}.orig.tar.gz"
 PROJECT_ROOT="${PROJECT_NAME}-${PROJECT_VERSION}"
 

@@ -12,6 +12,8 @@ SCRIPT_DIRECTORY=$(
 
 sudo ldapadd -Q -Y EXTERNAL -H ldapi:/// -f src/load-ppolicy-module.ldif
 
+dt unit add --name users
+dt unit add --name groups
 dt unit add --name policies
 
 sudo ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/ppolicy.ldif
