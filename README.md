@@ -2,35 +2,33 @@
 
 ## Setup
 
-This section explains how to install and uninstall the project.
-
-Install project dependencies.
+Install project dependencies:
 
 ```sh
 script/setup.sh
 ```
 
-Install pip package from GitHub.
+Install pip package from GitHub:
 
 ```sh
 pip3 install git+https://git@github.com/FunTimeCoding/directory-tools.git#egg=directory-tools
 ```
 
-Install pip package from DevPi.
+Install pip package from DevPi:
 
 ```sh
 pip3 install -i https://testpypi.python.org/pypi directory-tools
 ```
 
-Uninstall package.
+Uninstall package:
 
 ```sh
 pip3 uninstall directory-tools
 ```
 
-Configuration file location: `~/.directory-tools.yml`.
+Configuration file location: `~/.directory-tools.yml`
 
-Configure the project.
+Configure the project:
 
 ```yml
 host: ldap
@@ -43,78 +41,80 @@ manager-password: example
 
 ## Usage
 
-This section explains how to use the project.
-
-Run the main program.
+Run the main program:
 
 ```sh
-dt
+bin/dt
 ```
 
-Change the manager password.
+Run the main program inside the container:
 
 ```sh
-set-manager-password.sh admin
+docker run -it --rm funtimecoding/directory-tools
 ```
 
-Create an organizational unit for people and add a person.
+Create an organizational unit for people and add a person:
 
 ```sh
-unit.sh add people
-person.sh add "Alexander Reitzel"
+bin/unit.sh add people
+bin/person.sh add "Alexander Reitzel"
 ```
 
-Create a group for a POSIX account.
+Create a group for a POSIX account:
 
 ```sh
-unit.sh add groups
-group.sh add areitzel
+bin/unit.sh add groups
+bin/group.sh add areitzel
 ```
 
-Create an organizational unit for POSIX accounts and add an account.
+Create an organizational unit for POSIX accounts and add an account:
 
 ```sh
-unit.sh add users
-user.sh add "Alexander Reitzel"
-group.sh add_user areitzel
+bin/unit.sh add users
+bin/user.sh add "Alexander Reitzel"
+bin/group.sh add_user areitzel
 ```
 
-Show the whole suffix.
+Show the whole suffix:
 
 ```sh
-suffix.sh
+bin/suffix.sh
 ```
 
-Show status information.
+Show status information:
 
 ```sh
-status.sh
+bin/status.sh
 ```
 
 
 ## Development
 
-This section explains how to improve the project.
-
-Configure Git on Windows before cloning. This avoids problems with Vagrant and VirtualBox.
+Configure Git on Windows before cloning:
 
 ```sh
 git config --global core.autocrlf input
 ```
 
-Create the development virtual machine on Linux and Darwin.
+Install NFS plug-in for Vagrant on Windows:
+
+```bat
+vagrant plugin install vagrant-winnfsd
+```
+
+Create the development virtual machine on Linux and Darwin:
 
 ```sh
 script/vagrant/create.sh
 ```
 
-Create the development virtual machine on Windows.
+Create the development virtual machine on Windows:
 
 ```bat
 script\vagrant\create.bat
 ```
 
-Run tests, style check and metrics.
+Run tests, style check and metrics:
 
 ```sh
 script/test.sh [--help]
@@ -122,19 +122,19 @@ script/check.sh [--help]
 script/measure.sh [--help]
 ```
 
-Build project.
+Build project:
 
 ```sh
 script/build.sh
 ```
 
-Install Debian package.
+Install Debian package:
 
 ```sh
 sudo dpkg --install build/python3-directory-tools_0.1.0-1_all.deb
 ```
 
-Show files the package installed.
+Show files the package installed:
 
 ```sh
 dpkg-query --listfiles python3-directory-tools
@@ -143,21 +143,21 @@ dpkg-query --listfiles python3-directory-tools
 
 ## Abbreviations
 
-* O - Organization
-* CN - Common Name
-* OU - Organizational Unit
-* DC - Domain Component
-* LDIF LDAP Data Interchange Format
-* DN - Distinguished Name
-* SN - Surname
-* BaseDN - Tree branch to work from.
- * Alias: suffix
- * Example: 'dc=example,dc=org'
-* BindDN - User who connects to the server.
- * Example: 'cn=admin,dc=example,dc=org'
-* DSE - DSA Specific Entry.
- * Alias: RootDSE
-* DSA - Directory System Agent
-* OLC - On-Line Configuration.
- * Aliases: cn=config, slapd.d
-* DIT - Directory Information Tree. Sum of entries in the database.
+- O - Organization
+- CN - Common Name
+- OU - Organizational Unit
+- DC - Domain Component
+- LDIF LDAP Data Interchange Format
+- DN - Distinguished Name
+- SN - Surname
+- BaseDN - Tree branch to work from.
+  - Alias: suffix
+  - Example: 'dc=example,dc=org'
+- BindDN - User who connects to the server.
+  - Example: 'cn=admin,dc=example,dc=org'
+- DSE - DSA Specific Entry.
+  - Alias: RootDSE
+- DSA - Directory System Agent
+- OLC - On-Line Configuration.
+  - Aliases: cn=config, slapd.d
+- DIT - Directory Information Tree. Sum of entries in the database.

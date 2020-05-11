@@ -12,7 +12,7 @@ from sentry_sdk import init as initialize_sentry, capture_exception
 from directory_tools.register_form import RegisterForm
 from flask import Blueprint, request, session, redirect, url_for, \
     render_template, flash
-from directory_tools.configuration import Configuration
+from python_utility.configuration import Configuration
 
 initializeLog(
     level=INFO,

@@ -3,6 +3,8 @@ mkdir
 tmp
 uname
 sudo
+uniq
+sshd
 netmask
 nameservers
 DHCP
@@ -12,3 +14,7 @@ libenchant
 hunspell
 wget
 myspell
+gecos
+NFS
+slapd
+slappasswd

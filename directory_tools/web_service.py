@@ -2,7 +2,7 @@ from os.path import expanduser
 
 from flask import Flask
 
-from directory_tools.configuration import Configuration
+from python_utility.configuration import Configuration
 
 
 class WebService:
