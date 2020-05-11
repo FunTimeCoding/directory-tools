@@ -15,7 +15,7 @@ usage() {
 . "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
 DOMAIN="${1}"
 
-if [ "${DOMAIN}" = "" ]; then
+if [ "${DOMAIN}" = '' ]; then
     usage
 
     exit 1
