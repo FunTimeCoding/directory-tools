@@ -39,11 +39,6 @@ def index():
     return render_template(template_name_or_list='index.html')
 
 
-@frontend.route('/')
-def index():
-    return render_template(template_name_or_list='index.html')
-
-
 @frontend.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form)
@@ -65,7 +60,7 @@ def register():
             )
             flash('Registration complete.')
 
-            return redirect(url_for('login'))
+            return redirect(url_for('.login'))
         except RuntimeError as error:
             capture_exception(error)
             message = str(error)
@@ -93,7 +88,7 @@ def recover():
         # flash('Email sent.')
         flash('Not implemented yet.')
 
-        return redirect(url_for('recover'))
+        return redirect(url_for('.recover'))
 
     return render_template(template_name_or_list='recover.html', form=form)
 
@@ -112,12 +107,12 @@ def login():
             session['username'] = request.form['username']
             flash('Login successful.')
 
-            return redirect(url_for('index'))
+            return redirect(url_for('.index'))
         except AuthenticationError as error:
             capture_exception(error)
             flash('Login failed.')
 
-            return redirect(url_for('login'))
+            return redirect(url_for('.login'))
 
     return render_template('login.html', form=form)
 
@@ -131,7 +126,7 @@ def logout():
     else:
         flash('Not logged in.')
 
-    return redirect(url_for('index'))
+    return redirect(url_for('.index'))
 
 
 @frontend.route('/profile', methods=['GET', 'POST'])
@@ -152,7 +147,7 @@ def profile():
             )
             flash('Profile updated.')
 
-            return redirect(url_for('profile'))
+            return redirect(url_for('.profile'))
 
         return render_template(
             template_name_or_list='profile.html',
@@ -161,7 +156,7 @@ def profile():
     else:
         flash('Not logged in.')
 
-        return redirect(url_for('login'))
+        return redirect(url_for('.login'))
 
 
 @frontend.route('/change_email', methods=['GET', 'POST'])
@@ -178,7 +173,7 @@ def change_email():
             # flash('Email sent.')
             flash('Email changed.')
 
-            return redirect(url_for('change_email'))
+            return redirect(url_for('.change_email'))
 
         return render_template(
             template_name_or_list='change_email.html',
@@ -187,7 +182,7 @@ def change_email():
     else:
         flash('Not logged in.')
 
-        return redirect(url_for('login'))
+        return redirect(url_for('.login'))
 
 
 @frontend.route('/change_password', methods=['GET', 'POST'])
@@ -203,7 +198,7 @@ def change_password():
             )
             flash('Password changed.')
 
-            return redirect(url_for('change_password'))
+            return redirect(url_for('.change_password'))
 
         return render_template(
             template_name_or_list='change_password.html',
@@ -212,7 +207,7 @@ def change_password():
     else:
         flash('Not logged in.')
 
-        return redirect(url_for('login'))
+        return redirect(url_for('.login'))
 
 
 def authorize():

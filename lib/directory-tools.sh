@@ -24,7 +24,7 @@ done
 OPTIND=1
 
 if [ "${CONFIG}" = '' ]; then
-    CONFIG="${HOME}/.directory-tools.yml"
+    CONFIG="${HOME}/.directory-tools.yaml"
 fi
 
 if [ -f "${CONFIG}" ]; then

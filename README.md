@@ -26,7 +26,7 @@ Uninstall package:
 pip3 uninstall directory-tools
 ```
 
-Configuration file location: `~/.directory-tools.yml`
+Configuration file location: `~/.directory-tools.yaml`
 
 Configure the project:
 

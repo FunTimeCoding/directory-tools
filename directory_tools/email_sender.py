@@ -15,9 +15,9 @@ class EmailSender:
         message['Subject'] = subject
         message['From'] = self.sender
         message['To'] = recipient
-        transport = SMTP(host=self.server)
 
         try:
+            transport = SMTP(host=self.server)
             transport.send_message(msg=message)
             transport.quit()
         except ConnectionRefusedError as exception:

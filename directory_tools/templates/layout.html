@@ -6,16 +6,16 @@
 </head>
 <body>
 <p>
-    <a href="{{ url_for('index') }}">Index</a>
+    <a href="{{ url_for('.index') }}">Index</a>
     {% if session.logged_in %}
-    <a href="{{ url_for('profile') }}">Profile</a>
-    <a href="{{ url_for('change_password') }}">Change password</a>
-    <a href="{{ url_for('change_email') }}">Change email</a>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <a href="{{ url_for('.profile') }}">Profile</a>
+    <a href="{{ url_for('.change_password') }}">Change password</a>
+    <a href="{{ url_for('.change_email') }}">Change email</a>
+    <a href="{{ url_for('.logout') }}">Logout</a>
     {% else %}
-    <a href="{{ url_for('login') }}">Login</a>
-    <a href="{{ url_for('register') }}">Register</a>
-    <a href="{{ url_for('recover') }}">Recover</a>
+    <a href="{{ url_for('.login') }}">Login</a>
+    <a href="{{ url_for('.register') }}">Register</a>
+    <a href="{{ url_for('.recover') }}">Recover</a>
     {% endif %}
 </p>
 
