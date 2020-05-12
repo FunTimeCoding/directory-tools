@@ -3,3 +3,4 @@ ppolicy
 Cleartext
 changetype
 authc
+openldap
