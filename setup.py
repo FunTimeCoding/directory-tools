@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='directory-tools',
@@ -27,7 +27,9 @@ setup(
         ' :: LDAP',
     ],
     keywords='slapd openldap abstraction command line web service',
-    packages=['directory_tools'],
+    packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
     install_requires=['pyyaml', 'flask', 'ldap3'],
     python_requires='>=3.2',
     entry_points={
