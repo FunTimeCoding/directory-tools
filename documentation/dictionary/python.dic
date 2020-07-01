@@ -16,11 +16,17 @@ DevPi
 pip3
 python3
 gitpython
+mypy
+lxml
 
 # pytest
 pytest
 exitfirst
 capsys
+xunit
+addopts
+junitxml
+coveragerc
 
 # pylint
 pylint
@@ -37,3 +43,7 @@ mymodule
 inlinevar
 regexes
 classmethod
+
+# pyzabbix
+pyzabbix
+applicationid
