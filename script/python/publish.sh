@@ -9,7 +9,7 @@ if [ "${ENVIRONMENT}" = "" ]; then
     exit 1
 fi
 
-# TODO: Check if already published: curl https://pypi.shiin.org/simple/directory-tools/
+# TODO: Check if already published: curl https://pypi.shiin.org/simple/python-skeleton/
 
 if [ "${ENVIRONMENT}" = development ]; then
     twine upload build/*.whl --repository development

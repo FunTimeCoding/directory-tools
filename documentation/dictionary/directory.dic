@@ -1,6 +1,6 @@
-inet
 ppolicy
 Cleartext
 changetype
+inet
 authc
 openldap

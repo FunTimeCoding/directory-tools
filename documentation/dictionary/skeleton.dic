@@ -7,5 +7,14 @@ JenkinsTools
 LowerCaseSeparated
 UpperCaseSeparated
 ic
-DirectoryTools
+ShellSkeleton
 ss
+ps
+src
+LanguageExample
+XmlLibrary
+SpecialName
+MultiWordName
+CamelCaseConvention
+CHANGELOG
+pyskel

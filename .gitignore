@@ -7,8 +7,6 @@
 /debian/directory-tools.substvars
 /documentation/man/*.1
 /.scannerwork
-
-# Python
 /dist
 /.coverage
 /.cache
