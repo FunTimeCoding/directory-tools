@@ -12,7 +12,7 @@ Example: ${0} uid=john,ou=users,dc=example,dc=org"
 }
 
 # shellcheck source=/dev/null
-. "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
+. "${SCRIPT_DIRECTORY}/../../lib/directory-tools.sh"
 DISTINGUISHED_NAME="${1}"
 
 if [ "${DISTINGUISHED_NAME}" = '' ]; then
