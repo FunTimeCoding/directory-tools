@@ -12,7 +12,7 @@ Example: ${0} uid=john,ou=users,dc=example,dc=org john@example.org"
 }
 
 # shellcheck source=/dev/null
-. "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
+. "${SCRIPT_DIRECTORY}/../../lib/directory-tools.sh"
 DISTINGUISHED_NAME="${1}"
 EMAIL="${1}"
 

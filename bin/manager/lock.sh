@@ -12,7 +12,7 @@ Example: ${0} uid=john,ou=users,dc=example,dc=org 20200101143000Z"
 }
 
 # shellcheck source=/dev/null
-. "${SCRIPT_DIRECTORY}/../lib/directory-tools.sh"
+. "${SCRIPT_DIRECTORY}/../../lib/directory-tools.sh"
 DISTINGUISHED_NAME="${1}"
 LOCK_TIME="${1}"
 
