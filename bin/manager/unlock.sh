@@ -22,5 +22,5 @@ if [ "${DISTINGUISHED_NAME}" = '' ]; then
 fi
 
 echo "dn: ${DISTINGUISHED_NAME}
-delete: pwdAccountLockedTime" >tmp/unlock.diff
+delete: pwdAccountLockedTime" >tmp/unlock.ldif
 ldapmodify -W -D "${MANAGER_DN}" -f tmp/unlock.ldif

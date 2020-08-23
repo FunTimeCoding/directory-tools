@@ -24,5 +24,5 @@ fi
 
 echo "dn: ${DISTINGUISHED_NAME}
 add: pwdAccountLockedTime
-pwdAccountLockedTime: ${LOCK_TIME}" >tmp/lock.diff
+pwdAccountLockedTime: ${LOCK_TIME}" >tmp/lock.ldif
 ldapmodify -W -D "${MANAGER_DN}" -f tmp/lock.ldif
