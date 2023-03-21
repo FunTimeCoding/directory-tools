@@ -11,6 +11,6 @@ mypy # type checker
 ldap3
 flask
 flask-wtf # form extension
-sentry-sdk == 0.14.3 # monitoring service
+sentry-sdk == 1.14.0 # monitoring service
 waitress # WSGI server
 shyaml # YAML parser for shell scripts
